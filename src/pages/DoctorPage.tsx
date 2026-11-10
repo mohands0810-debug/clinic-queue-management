@@ -21,6 +21,8 @@ import { QueueTable } from '@/components/doctor/QueueTable';
 import { HelpRequestsBanner } from '@/components/doctor/HelpRequestsBanner';
 import { DelayBroadcastModal } from '@/components/doctor/DelayBroadcastModal';
 import { ThermalPrintSlip } from '@/components/doctor/ThermalPrintSlip';
+import { ReportsTab } from '@/components/doctor/ReportsTab';
+import { SettingsTab } from '@/components/doctor/SettingsTab';
 
 import { 
   Users, 
@@ -463,36 +465,18 @@ export const DoctorPage: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 2: REPORTS TAB (Activated in Phase 6) */}
+      {/* TAB 2: REPORTS TAB */}
       {activeTab === 'reports' && (
-        <div className="bg-card border rounded-3xl p-12 text-center space-y-4 shadow-sm">
-          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
-            <BarChart3 className="w-8 h-8" />
-          </div>
-          <h2 className="text-2xl font-black text-foreground">Clinical Operations & Waiting Reports</h2>
-          <p className="text-muted-foreground max-w-md mx-auto text-sm leading-relaxed">
-            Hourly throughput histograms, peak congestion charts, no-show trends, and CSV/PDF report export will be completed in Phase 6.
-          </p>
-        </div>
+        <ReportsTab tokens={tokens} settings={settings} />
       )}
 
-      {/* TAB 3: SETTINGS TAB (Activated in Phase 6) */}
+      {/* TAB 3: SETTINGS TAB */}
       {activeTab === 'settings' && (
-        <div className="bg-card border rounded-3xl p-12 text-center space-y-4 shadow-sm">
-          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
-            <SettingsIcon className="w-8 h-8" />
-          </div>
-          <h2 className="text-2xl font-black text-foreground">Clinic Configuration Settings</h2>
-          {!isDoctor ? (
-            <div className="p-4 bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 border border-amber-300 rounded-2xl font-bold max-w-md mx-auto text-sm">
-              Helper Access Restricted: Settings can only be modified by Dr Yogesh (Doctor role).
-            </div>
-          ) : (
-            <p className="text-muted-foreground max-w-md mx-auto text-sm leading-relaxed">
-              Operating hours, consultation duration targets, buffer times, senior interleaving ratio, and the presentation Simulation Mode will be completed in Phase 6.
-            </p>
-          )}
-        </div>
+        <SettingsTab
+          settings={settings}
+          isDoctor={isDoctor}
+          onSaved={fetchConsoleData}
+        />
       )}
 
       {/* Staff Sign-In Modal */}

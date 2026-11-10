@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-10 - Phase 6: Reports & Clinic Settings
+### Added
+- **ReportsTab** (`src/components/doctor/ReportsTab.tsx`) — Clinical analytics dashboard:
+  - KPI summary row: Total Registered, Completed, Missed/No-Show, Seniors Served, Avg Consultation time (rolling average from `started_at → completed_at`).
+  - Hourly throughput bar chart (pure CSS — no chart library): vertical bars per hour 9AM–9PM computed from `token.created_at`, with count labels above each bar.
+  - Status breakdown: colour-coded horizontal percentage bars per status (waiting=blue, called=emerald+pulse, in_progress=emerald, completed=gray, missed=red, cancelled=slate, hold=amber).
+  - Registration source breakdown: QR Scan (violet), Phone/Web (sky), Doctor Desk (orange) horizontal bars.
+  - CSV export: Downloads `dhanvantri-queue-YYYY-MM-DD.csv` with columns Token#, Patient, Status, Source, Senior, Created, Called, Started, Completed.
+- **SettingsTab** (`src/components/doctor/SettingsTab.tsx`) — Live clinic configuration form:
+  - 🔒 Doctor-only: helpers see amber access-restricted banner; form is only rendered for `isDoctor === true`.
+  - Section 1 — Operating Hours: morning start/end, evening start/end (native `time` inputs in 2×2 grid).
+  - Section 2 — Queue Timing: default consultation minutes, buffer time, grace period, senior interleave ratio (all `number` inputs with min/max guards and helper text).
+  - Section 3 — Advanced: custom CSS toggle for Simulation Mode (amber warning banner when ON), max daily tokens field.
+  - Save writes via `supabase.from('clinic_settings').update(...).eq('id', settings.id)`, shows green success banner (auto-clears after 3s) or red error banner, calls `onSaved()` to trigger parent refetch.
+  - `useEffect` re-initialises all form state when `settings` prop changes (handles Realtime updates).
+- **DoctorPage** wired up: replaced both placeholder tab bodies with `<ReportsTab>` and `<SettingsTab>` components.
+
 ## [0.6.0] - 2026-11-10 - Phase 5: TV Display Board
 ### Added
 - **DisplayPage** (`src/pages/DisplayPage.tsx`) — Full clinic waiting-room TV board rewrite:
