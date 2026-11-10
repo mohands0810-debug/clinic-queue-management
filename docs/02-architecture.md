@@ -151,3 +151,4 @@ sequenceDiagram
 2. **Postgres Logical Replication (WAL)**: The Supabase Realtime daemon monitors write-ahead logs and broadcasts event payloads to active WebSocket clients within 150–300 milliseconds.
 3. **Optimistic UI with Reversion**: Doctor console buttons show instantaneous visual feedback while awaiting RPC confirmation. If a network interruption occurs, the UI rolls back and presents an explicit retry notification.
 4. **Heartbeat & Exponential Backoff**: When patient smartphones enter sleep mode or lose network connectivity in the Sandhya Theater Complex basement, the client automatically re-syncs state immediately upon network resumption.
+

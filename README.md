@@ -202,3 +202,4 @@ This project is submitted in partial fulfillment of the requirements for the **C
 - **UN Sustainable Development Goals**:
   - **SDG 3 (Good Health and Well-Being)**: Minimizes cross-infection risks in congested outpatient waiting rooms and reduces clinical stress.
   - **SDG 10 (Reduced Inequalities)**: Guarantees digital healthcare inclusion for elderly, non-smartphone, and differently-abled citizens.
+

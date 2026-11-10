@@ -160,3 +160,4 @@ A 3-step streamlined linear process:
   - Wait duration histogram, peak hourly traffic graph, no-show rate meter, CSV/PDF export.
 - **Settings Tab**:
   - Consultation target duration, senior interleaving ratio, clinic hours, and simulation mode switch.
+

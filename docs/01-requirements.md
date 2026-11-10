@@ -102,3 +102,4 @@ The system intentionally restricts access to **three roles** across two operatio
    - The clinic waiting room uses an existing commercial smart TV or HDMI mini-PC running a standard Chromium-based browser at 1080p resolution.
    - The doctor's desk uses a laptop or tablet running Google Chrome / Edge with a standard ESC/POS thermal receipt printer or standard office printer.
 4. **Third-Party Messaging Limits**: SMS and WhatsApp notifications via MSG91/Twilio require active API balance. When API keys are unconfigured, the application gracefully falls back to Web Push, device vibration, and audio chimes at zero cost.
+

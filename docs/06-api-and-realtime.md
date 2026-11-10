@@ -184,3 +184,4 @@ Calculates dynamic waiting durations and realistic bounds for any active token.
 | `room:clinic-display` | All display updates | `TOKEN_CALLED`, `DELAY_ALERT` | Called token number, patient initials, delay announcement banners |
 | `token:<token_id>` | Specific patient token UUID | `STATUS_CHANGE`, `GRACE_START` | Complete individual token status, exact wait estimates, "come by" updates |
 | `room:doctor-console` | Staff role only | `HELP_REQUEST`, `WALK_IN_ADDED` | Incoming help requests, arrival confirmations, queue overrides |
+

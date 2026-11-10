@@ -166,3 +166,4 @@ stateDiagram-v2
     InProgress --> Completed : Doctor completes consultation
     Completed --> [*]
 ```
+

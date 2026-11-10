@@ -88,3 +88,4 @@ Dhanvantri Clinic operates as a high-density, single-doctor outpatient clinic in
 1. **Multi-Doctor Clinic Scaling**: Activation of the nullable `doctor_id` schema to support multi-specialty community health centers.
 2. **Digital Prescription Integration**: Optional secure prescription delivery directly to the patient's token session upon consultation completion.
 3. **Primary Health Center (PHC) & Referral Network**: Connecting outpatient clinic queues to local government hospitals and diagnostic labs across Bengaluru.
+

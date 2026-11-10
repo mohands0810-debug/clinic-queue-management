@@ -40,3 +40,4 @@ lerna-debug.log*
 # Supabase
 supabase/.temp/
 supabase/.branches/
+

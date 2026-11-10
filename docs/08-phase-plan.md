@@ -28,17 +28,19 @@
   - [x] Initialize Git repository, connect to remote GitHub repository, commit ("phase-0: project documentation"), and push to `main`.
   - [x] Verify commit hash and await user approval before proceeding to Phase 1.
 
-- [ ] **PHASE 1: PROJECT SETUP AND DATABASE**
-  - [ ] Scaffold React 18 + Vite + TypeScript application with Tailwind CSS and shadcn/ui.
-  - [ ] Configure client routing (`/`, `/get-token`, `/status`, `/display`, `/doctor`).
-  - [ ] Wire react-i18next with English, Kannada (`ಕನ್ನಡ`), and Hindi (`हिन्दी`) localization dictionaries.
-  - [ ] Write all Supabase PostgreSQL migrations (`supabase/migrations/`):
-    - [ ] Tables, indexes, unique constraints, and foreign keys.
-    - [ ] Sanitized `public_queue` database view.
-    - [ ] Comprehensive Row Level Security (RLS) policies.
-    - [ ] Initial seed data: Dr Yogesh profile instructions, 12 sample tokens, 3 senior profiles.
-  - [ ] Execute SQL tests validating RLS boundaries.
-  - [ ] Update documentation, commit, and push.
+- [x] **PHASE 1: PROJECT SETUP AND DATABASE**
+  - [x] Scaffold React 18 + Vite + TypeScript application with Tailwind CSS and shadcn/ui.
+  - [x] Configure client routing (`/`, `/get-token`, `/status`, `/display`, `/doctor`).
+  - [x] Wire react-i18next with English, Kannada (`ಕನ್ನಡ`), and Hindi (`हिन्दी`) localization dictionaries.
+  - [x] Write all Supabase PostgreSQL migrations (`supabase/migrations/`):
+    - [x] Tables, indexes, unique constraints, and foreign keys (`20261110000001_initial_schema.sql`).
+    - [x] Sanitized `public_queue` database view (`20261110000002_safe_public_view.sql`).
+    - [x] Comprehensive Row Level Security (RLS) policies (`20261110000003_rls_policies.sql`).
+    - [x] Initial seed data: Dr Yogesh profile instructions, 12 sample tokens, 3 senior profiles (`20261110000004_seed_data.sql`).
+  - [x] Execute SQL tests validating RLS boundaries (`20261110000005_test_rls.sql`).
+  - [x] Document step-by-step Supabase connection & migration instructions (`docs/11-supabase-setup-guide.md`).
+  - [x] Verify production compilation (TypeScript + Vite build: 162.76 kB gzipped).
+  - [x] Update documentation, commit, and push.
 
 - [ ] **PHASE 2: AUTH AND CORE QUEUE LOGIC (BACKEND)**
   - [ ] Implement Supabase Auth login flow for Doctor and Helper roles with route guards.
@@ -101,3 +103,4 @@
   - [ ] Deploy production frontend to Vercel/Netlify connected to production Supabase backend.
   - [ ] Capture live production screenshots and embed into `README.md`.
   - [ ] Finalize documentation, update CHANGELOG, tag release `v1.0.0`, commit, and push.
+

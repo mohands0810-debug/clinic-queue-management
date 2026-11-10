@@ -321,3 +321,4 @@ All critical queue logic is executed within atomic Postgres transactions to prev
 | `hold_turn(p_token_id UUID, p_hold_mins INT)` | Staff | Sets token status to `hold` and `hold_until = NOW() + INTERVAL '1 minute' * p_hold_mins`. |
 | `reorder_queue(p_token_ids UUID[], p_reason TEXT)` | Staff | Updates `position_override` across an array of tokens and inserts an audit trail entry. |
 | `compute_wait_estimate(p_token_id UUID)` | Public & Staff | Returns estimated wait duration in minutes, standard deviation range, and doctor delay offset. |
+
