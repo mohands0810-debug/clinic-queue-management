@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
@@ -480,9 +481,13 @@ export const DoctorPage: React.FC = () => {
       )}
 
       {/* Staff Sign-In Modal */}
-      {showLoginModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-card border rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+      {showLoginModal && createPortal(
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center p-4"
+          style={{ zIndex: 99999 }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowLoginModal(false); }}
+        >
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 relative" style={{ zIndex: 100000 }}>
             <div className="flex items-center justify-between border-b pb-2">
               <h3 className="text-xl font-bold flex items-center gap-2">
                 <Lock className="w-5 h-5 text-primary" />
@@ -546,7 +551,8 @@ export const DoctorPage: React.FC = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.getElementById('modal-root') || document.body
       )}
     </div>
   );

@@ -57,7 +57,7 @@ export const DelayBroadcastModal: React.FC<DelayBroadcastModalProps> = ({
           style={{ zIndex: 99999 }}
           onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false); }}
         >
-          <div className="bg-card border rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-5 relative" style={{ zIndex: 100000 }}>
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-5 relative" style={{ zIndex: 100000 }}>
             <div className="flex items-center justify-between border-b pb-3">
               <div>
                 <h3 className="font-extrabold text-xl text-foreground flex items-center gap-2">
