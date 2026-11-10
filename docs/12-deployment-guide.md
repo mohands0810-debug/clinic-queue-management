@@ -165,3 +165,4 @@ If internet connectivity drops at the clinic:
 1. The Workbox Service Worker serves the cached application shell instantly.
 2. The desk staff can switch to the local manual backup log sheets pre-printed in `docs/09-user-guides.md`.
 3. Once internet reconnects, all pending local events sync back with Supabase.
+
