@@ -58,14 +58,17 @@
   - [x] Build typed client API wrapper (`src/lib/queue-api.ts`) and wire into Doctor and Patient flows.
   - [x] Update documentation, commit, and push.
 
-- [ ] **PHASE 3: DOCTOR CONSOLE (QUEUE TAB)**
-  - [ ] Build Doctor Console Queue view on live Supabase data.
-  - [ ] Implement active patient consultation card and next patient preview.
-  - [ ] Build atomic control buttons: Call Next, Start, Complete, Missed, Hold, Skip, Cancel.
-  - [ ] Implement Walk-In Patient form with instant 58mm/80mm thermal slip printing.
-  - [ ] Build drag-and-drop queue reordering with mandatory reason logging.
-  - [ ] Build live distress help requests banner and one-tap delay/break broadcast tools.
-  - [ ] Update documentation, commit, and push.
+- [x] **PHASE 3: DOCTOR CONSOLE (QUEUE TAB)**
+  - [x] Build Doctor Console Queue view on live Supabase data (`src/pages/DoctorPage.tsx`).
+  - [x] Implement active patient consultation card (`CurrentPatientCard.tsx`) with live consultation clock and delay detection.
+  - [x] Implement next patient preview card (`NextPatientPreview.tsx`) to anticipate accessibility and lobby readiness.
+  - [x] Build atomic control buttons: Call Next (Senior Fair Interleaving), Start, Complete, Missed (Grace Period), Hold Turn, Cancel.
+  - [x] Implement Walk-In Patient form (`WalkInForm.tsx`) with automatic 58mm/80mm thermal slip print engine and live tracking QR code (`ThermalPrintSlip.tsx`).
+  - [x] Build searchable waiting queue table (`QueueTable.tsx`) with move up/down sequence reordering and audit justification modal.
+  - [x] Build live distress help requests banner (`HelpRequestsBanner.tsx`) with instant resolution workflow.
+  - [x] Build one-tap doctor status & delay broadcast modal (`DelayBroadcastModal.tsx`) synchronizing to TV and mobile screens in <500ms.
+  - [x] Build real-time daily summary metric cards (`DailySummaryCards.tsx`).
+  - [x] Update documentation, commit, and push.
 
 - [ ] **PHASE 4: PATIENT SIDE WITH SENIOR-FRIENDLY DESIGN SYSTEM**
   - [ ] Implement Patient Home (`/`) with clinic status, now serving badge, and oversized actions.

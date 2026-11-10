@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-10 - Phase 3: Doctor Console (Queue Tab)
+### Added
+- Complete interactive Doctor Console Queue management subsystem (`src/pages/DoctorPage.tsx`):
+  - `CurrentPatientCard`: Active consultation room card featuring oversized token number, patient phone and demographics, senior citizen badges, accessibility profiling (wheelchair, hearing, vision), live consultation stopwatch, pace delay warnings, and atomic controls (Start, Complete, Hold Turn, Mark Missed, Next Patient, Cancel).
+  - `NextPatientPreview`: Upcoming patient card alerting clinic staff in advance to prepare accessibility accommodations (e.g. wheelchair ramp) and indicating lobby physical presence.
+  - `WalkInForm`: Two-click walk-in entry widget for non-smartphone patients with automated senior citizen detection (age 60+).
+  - `ThermalPrintSlip`: Silent CSS `@media print` thermal slip template formatted for 58mm/80mm receipt printers with clinic header, huge token number, and dynamic family tracking QR code.
+  - `QueueTable`: Searchable waiting line filterable by search query (name/phone/token) and quick pills (`All`, `Seniors 60+`, `In Lobby`), featuring Up/Down reordering with mandatory audit justification logging.
+  - `HelpRequestsBanner`: Live pulsating alert bar subscribing to Supabase Realtime for instant patient distress notifications with one-tap resolution.
+  - `DelayBroadcastModal`: One-tap preset delay bar allowing Dr Yogesh to broadcast break intervals (*"Tea Break - 15 mins"*, *"Lunch Break until 2 PM"*, *"Emergency Case"*) updating TV and patient phones in <500ms.
+  - `DailySummaryCards`: Real-time daily clinical metrics tracking total tokens, active waiting count, completed consultations, seniors served, and average consultation pace.
+
 ## [0.3.0] - 2026-11-10 - Phase 2: Auth and Core Queue Logic Backend
 ### Added
 - Complete suite of atomic PostgreSQL stored procedures (`supabase/migrations/20261110000006_rpc_functions.sql`):
