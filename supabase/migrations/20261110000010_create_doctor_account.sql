@@ -58,3 +58,4 @@ BEGIN
 
   RAISE NOTICE 'Staff account created successfully: doctor@dhanvantri.clinic';
 END $$;
+
