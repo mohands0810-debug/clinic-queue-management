@@ -29,6 +29,29 @@
     --font-scale: 1;
   }
 
+  /* Clean Dark Mode */
+  .dark {
+    --background: 222 47% 11%; /* #0B1329 Dark Slate */
+    --foreground: 210 40% 98%;
+    --card: 222 47% 15%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 15%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 208 85% 48%; /* Vivid Blue */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 222 47% 18%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 222 47% 18%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 222 47% 18%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 222 47% 22%;
+    --input: 222 47% 22%;
+    --ring: 208 85% 48%;
+  }
+
   /* High Contrast Mode (WCAG AAA) */
   .high-contrast {
     --background: 0 0% 0%; /* Pure Black */

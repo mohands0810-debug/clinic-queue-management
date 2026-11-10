@@ -6,6 +6,8 @@ interface AccessibilityContextType {
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
   resetFontSize: () => void;
+  isDarkMode: boolean;
+  toggleDarkMode: () => void;
   isHighContrast: boolean;
   toggleHighContrast: () => void;
   speakText: (text: string, overrideLang?: string) => void;
@@ -22,13 +24,30 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     return saved ? parseFloat(saved) : 1.0;
   });
 
-  const [isHighContrast, setIsHighContrast] = useState<boolean>(() => {
-    const saved = localStorage.getItem('dhanvantri_high_contrast');
-    return saved === 'true';
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('dhanvantri_theme');
+    if (saved) return saved === 'dark';
+    return typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
+
+  const [isHighContrast, setIsHighContrast] = useState<boolean>(false);
 
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+
+  // Apply dark mode class to root
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('dhanvantri_theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev);
+  };
 
   // Load and cache voices when browser is ready
   useEffect(() => {
@@ -165,6 +184,8 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
         increaseFontSize,
         decreaseFontSize,
         resetFontSize,
+        isDarkMode,
+        toggleDarkMode,
         isHighContrast,
         toggleHighContrast,
         speakText,

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
@@ -40,8 +39,7 @@ export const DoctorPage: React.FC = () => {
   const { t } = useTranslation();
   const { user, profile, isDoctor, signIn, signOut } = useAuth();
 
-  // Auth Modal State
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  // Auth Form State
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [authLoading, setAuthLoading] = useState<boolean>(false);
@@ -114,8 +112,6 @@ export const DoctorPage: React.FC = () => {
     const { error } = await signIn(email, password);
     if (error) {
       setAuthError(error.message);
-    } else {
-      setShowLoginModal(false);
     }
     setAuthLoading(false);
   };
@@ -289,6 +285,79 @@ export const DoctorPage: React.FC = () => {
   const waitingPatients = tokens.filter((t) => t.status === 'waiting' || t.status === 'hold');
   const nextPatient = waitingPatients.length > 0 ? waitingPatients[0] : null;
 
+  // Security Gate: Require staff sign-in before revealing queue, patient data, and controls
+  if (!user) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-12 space-y-6">
+        <div className="bg-card border rounded-3xl p-8 shadow-xl space-y-6 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto shadow-sm">
+            <Lock className="w-8 h-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+              Doctor Console
+            </h1>
+            <p className="text-sm font-semibold text-muted-foreground mt-1">
+              Dhanvantri Clinic • Dr Yogesh
+            </p>
+          </div>
+
+          <div className="bg-muted p-3.5 rounded-2xl text-xs font-semibold text-muted-foreground leading-relaxed text-left border">
+            🔒 <strong>Staff Authentication Required:</strong> Patient list, waiting line, walk-in check-in, and delay broadcast are secured. Please sign in below to access the console.
+          </div>
+
+          {authError && (
+            <div className="p-3 bg-destructive/10 text-destructive text-sm font-semibold rounded-xl flex items-center gap-2 text-left">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{authError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4 text-left">
+            <div>
+              <label className="text-xs font-bold text-muted-foreground uppercase">Email</label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="doctor@dhanvantri.clinic"
+                className="w-full h-12 px-3 border rounded-xl text-base bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-muted-foreground uppercase">Password</label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full h-12 px-3 border rounded-xl text-base bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={authLoading}
+              className="w-full h-12 bg-primary text-primary-foreground rounded-xl font-bold text-base hover:bg-primary-700 shadow-md transition-colors flex items-center justify-center gap-2"
+            >
+              {authLoading ? (
+                <span>Signing In...</span>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  <span>Sign In as Staff</span>
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
       {/* Hidden Thermal Print Slip for Browser Print Engine */}
@@ -370,28 +439,18 @@ export const DoctorPage: React.FC = () => {
             <RefreshCw className="w-4 h-4" />
           </button>
 
-          {user ? (
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300">
-                {profile ? `${profile.full_name} (${profile.role})` : user.email}
-              </span>
-              <button
-                onClick={signOut}
-                className="px-3 py-1.5 border rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-muted text-destructive transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
-              </button>
-            </div>
-          ) : (
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-300 dark:border-emerald-700">
+              {profile ? `${profile.full_name} (${profile.role})` : user.email}
+            </span>
             <button
-              onClick={() => setShowLoginModal(true)}
-              className="px-3 py-1.5 bg-primary text-primary-foreground rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-primary-700 shadow"
+              onClick={signOut}
+              className="px-3 py-1.5 border rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-muted text-destructive transition-colors"
             >
-              <LogIn className="w-3.5 h-3.5" />
-              <span>Staff Sign In</span>
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Sign Out</span>
             </button>
-          )}
+          </div>
         </div>
       </div>
 
@@ -478,81 +537,6 @@ export const DoctorPage: React.FC = () => {
           isDoctor={isDoctor}
           onSaved={fetchConsoleData}
         />
-      )}
-
-      {/* Staff Sign-In Modal */}
-      {showLoginModal && createPortal(
-        <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center p-4"
-          style={{ zIndex: 99999 }}
-          onClick={(e) => { if (e.target === e.currentTarget) setShowLoginModal(false); }}
-        >
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 relative" style={{ zIndex: 100000 }}>
-            <div className="flex items-center justify-between border-b pb-2">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <Lock className="w-5 h-5 text-primary" />
-                <span>Doctor & Staff Sign In</span>
-              </h3>
-              <button
-                onClick={() => setShowLoginModal(false)}
-                className="text-muted-foreground hover:text-foreground font-bold text-lg p-1"
-              >
-                ✕
-              </button>
-            </div>
-
-            {authError && (
-              <div className="p-3 bg-destructive/10 text-destructive text-sm font-semibold rounded-xl flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                <span>{authError}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase">Email</label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="doctor@dhanvantri.clinic"
-                  className="w-full h-12 px-3 border rounded-xl text-sm bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-muted-foreground uppercase">Password</label>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full h-12 px-3 border rounded-xl text-sm bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
-                />
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowLoginModal(false)}
-                  className="w-1/2 h-12 border rounded-xl font-bold text-sm hover:bg-muted"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={authLoading}
-                  className="w-1/2 h-12 bg-primary text-primary-foreground rounded-xl font-bold text-sm hover:bg-primary-700 shadow"
-                >
-                  {authLoading ? 'Signing In...' : 'Sign In'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>,
-        document.getElementById('modal-root') || document.body
       )}
     </div>
   );

@@ -2,15 +2,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAccessibility } from '@/context/AccessibilityContext';
-import { Phone, AlertCircle, Eye, Volume2, Type } from 'lucide-react';
+import { Phone, AlertCircle, Volume2, Type, Sun, Moon } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { 
     increaseFontSize, 
     decreaseFontSize, 
-    isHighContrast, 
-    toggleHighContrast, 
+    isDarkMode, 
+    toggleDarkMode, 
     speakText,
     isSpeaking 
   } = useAccessibility();
@@ -93,19 +93,24 @@ export const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* High Contrast Toggle */}
+          {/* Clean Light / Dark Mode Toggle */}
           <button
-            onClick={toggleHighContrast}
-            aria-label="Toggle High Contrast Mode"
-            className={`px-3 py-1.5 rounded-md border font-semibold flex items-center gap-1.5 transition-colors ${
-              isHighContrast
-                ? 'bg-senior-amber text-black border-senior-amber'
-                : 'bg-muted text-foreground hover:bg-background'
-            }`}
-            title="High Contrast (AAA)"
+            onClick={toggleDarkMode}
+            aria-label={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="px-3 py-1.5 rounded-md border font-semibold flex items-center gap-1.5 transition-colors bg-muted text-foreground hover:bg-background"
+            title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            <Eye className="w-5 h-5" />
-            <span className="hidden sm:inline text-sm">Contrast</span>
+            {isDarkMode ? (
+              <>
+                <Sun className="w-5 h-5 text-amber-400" />
+                <span className="hidden sm:inline text-sm font-bold">Light</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-5 h-5 text-slate-700" />
+                <span className="hidden sm:inline text-sm font-bold">Dark</span>
+              </>
+            )}
           </button>
 
           {/* Speech Readout Quick Action */}
