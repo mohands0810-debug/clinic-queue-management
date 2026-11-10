@@ -335,3 +335,4 @@ export const CurrentPatientCard: React.FC<CurrentPatientCardProps> = ({
     </div>
   );
 };
+

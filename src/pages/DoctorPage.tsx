@@ -69,8 +69,8 @@ export const DoctorPage: React.FC = () => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tokens' }, () => {
         fetchConsoleData();
       })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'clinic_settings' }, (p) => {
-        setSettings(p.new as ClinicSettings);
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'clinic_settings' }, () => {
+        fetchConsoleData();
       })
       .subscribe();
 
@@ -255,6 +255,7 @@ export const DoctorPage: React.FC = () => {
     setActionLoading(true);
     setActionError(null);
     try {
+      if (!settings?.id) throw new Error('Clinic settings not loaded yet');
       const { error } = await supabase
         .from('clinic_settings')
         .update({
@@ -262,7 +263,7 @@ export const DoctorPage: React.FC = () => {
           delay_reason: reason,
           updated_at: new Date().toISOString(),
         })
-        .match({ clinic_name: 'Dhanvantri Clinic' });
+        .eq('id', settings.id);
 
       if (error) throw error;
       await fetchConsoleData();

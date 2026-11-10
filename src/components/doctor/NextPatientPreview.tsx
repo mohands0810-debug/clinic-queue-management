@@ -81,3 +81,4 @@ export const NextPatientPreview: React.FC<NextPatientPreviewProps> = ({
     </div>
   );
 };
+

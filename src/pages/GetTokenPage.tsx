@@ -3,15 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import { createTokenRPC } from '@/lib/queue-api';
 import { AccessibilityNeed } from '@/types/database';
-import { 
-  ArrowLeft, 
-  Check, 
-  Sparkles, 
-  Accessibility, 
-  VolumeX, 
-  Eye, 
-  HeartHandshake, 
-  AlertCircle 
+import {
+  ArrowLeft,
+  Check,
+  Sparkles,
+  Accessibility,
+  VolumeX,
+  Eye,
+  HeartHandshake,
+  AlertCircle,
+  Loader2,
 } from 'lucide-react';
 
 export const GetTokenPage: React.FC = () => {
@@ -65,7 +66,6 @@ export const GetTokenPage: React.FC = () => {
     setErrorMsg(null);
 
     try {
-      // Execute concurrency-safe atomic RPC function
       const result = await createTokenRPC({
         fullName: fullName.trim(),
         phone: noPhone ? null : phone.trim(),
@@ -74,11 +74,9 @@ export const GetTokenPage: React.FC = () => {
         source: 'phone',
       });
 
-      // Store personal session secret in localStorage for tracking
       localStorage.setItem('dhanvantri_active_token_id', result.token_id);
       localStorage.setItem('dhanvantri_session_secret', result.session_secret);
 
-      // Navigate to live status screen
       navigate(`/status?id=${result.token_id}`);
     } catch (err: unknown) {
       console.error('Error creating token:', err);
@@ -89,10 +87,52 @@ export const GetTokenPage: React.FC = () => {
     }
   };
 
+  // Step progress dots
+  const StepDots = () => (
+    <div className="flex items-center justify-center gap-3 mb-6">
+      {[1, 2, 3].map((s) => (
+        <div
+          key={s}
+          className={`rounded-full transition-all ${
+            s < step
+              ? 'w-4 h-4 bg-primary'
+              : s === step
+              ? 'w-5 h-5 bg-primary animate-pulse ring-4 ring-primary/30'
+              : 'w-4 h-4 bg-muted border-2 border-border'
+          }`}
+        />
+      ))}
+    </div>
+  );
+
+  const accessibilityOptions: { need: AccessibilityNeed; icon: React.ReactNode; label: string }[] =
+    [
+      {
+        need: 'wheelchair',
+        icon: <Accessibility className="w-7 h-7 text-primary flex-shrink-0" />,
+        label: t('tokenFlow.wheelchair'),
+      },
+      {
+        need: 'hearing',
+        icon: <VolumeX className="w-7 h-7 text-primary flex-shrink-0" />,
+        label: t('tokenFlow.hearing'),
+      },
+      {
+        need: 'vision',
+        icon: <Eye className="w-7 h-7 text-primary flex-shrink-0" />,
+        label: t('tokenFlow.vision'),
+      },
+      {
+        need: 'assistance',
+        icon: <HeartHandshake className="w-7 h-7 text-primary flex-shrink-0" />,
+        label: t('tokenFlow.assistance'),
+      },
+    ];
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
-      {/* Header Back link */}
-      <div className="mb-6 flex items-center justify-between">
+      {/* Header */}
+      <div className="mb-5 flex items-center justify-between">
         <Link
           to="/"
           className="inline-flex items-center gap-2 font-bold text-primary hover:underline text-lg"
@@ -106,27 +146,30 @@ export const GetTokenPage: React.FC = () => {
       </div>
 
       <div className="bg-card border rounded-2xl shadow-sm p-6 space-y-6">
+        {/* Title */}
         <div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">
             {t('tokenFlow.title')}
           </h2>
-          <p className="text-muted-foreground font-medium mt-1">
-            Dhanvantri Clinic • Dr Yogesh
-          </p>
+          <p className="text-muted-foreground font-medium mt-1">Dhanvantri Clinic • Dr Yogesh</p>
         </div>
 
+        {/* Step Progress Dots */}
+        <StepDots />
+
+        {/* Error Banner */}
         {errorMsg && (
-          <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive font-semibold flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive font-semibold flex items-start gap-2">
+            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        {/* STEP 1: Name and Phone */}
+        {/* STEP 1: Name + Phone */}
         {step === 1 && (
           <form onSubmit={handleStep1Next} className="space-y-5">
             <div className="space-y-2">
-              <label className="block text-lg font-bold text-foreground">
+              <label className="block text-xl font-bold text-foreground">
                 {t('tokenFlow.fullName')} *
               </label>
               <input
@@ -135,33 +178,34 @@ export const GetTokenPage: React.FC = () => {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder={t('tokenFlow.fullNamePlaceholder')}
-                className="w-full h-14 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                className="w-full h-16 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
               />
             </div>
 
             {!noPhone && (
               <div className="space-y-2">
-                <label className="block text-lg font-bold text-foreground">
+                <label className="block text-xl font-bold text-foreground">
                   {t('tokenFlow.phone')} *
                 </label>
                 <input
                   type="tel"
+                  inputMode="numeric"
                   required={!noPhone}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={t('tokenFlow.phonePlaceholder')}
-                  className="w-full h-14 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="w-full h-16 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
                 />
               </div>
             )}
 
-            <div className="pt-2">
+            <div className="pt-1">
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={noPhone}
                   onChange={(e) => setNoPhone(e.target.checked)}
-                  className="w-6 h-6 rounded border-input text-primary focus:ring-primary"
+                  className="w-7 h-7 rounded border-input text-primary focus:ring-primary"
                 />
                 <span className="text-base font-semibold text-muted-foreground">
                   {t('tokenFlow.noPhoneToggle')}
@@ -171,18 +215,18 @@ export const GetTokenPage: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full h-14 mt-4 bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md transition-colors"
+              className="w-full min-h-button-tall mt-4 bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md transition-colors flex items-center justify-center"
             >
-              Continue to Step 2
+              {t('tokenFlow.continueStep2', 'Continue to Step 2 →')}
             </button>
           </form>
         )}
 
-        {/* STEP 2: Age & Accessibility Profile */}
+        {/* STEP 2: Age + Accessibility */}
         {step === 2 && (
           <form onSubmit={handleStep2Next} className="space-y-5">
             <div className="space-y-2">
-              <label className="block text-lg font-bold text-foreground">
+              <label className="block text-xl font-bold text-foreground">
                 {t('tokenFlow.age')} *
               </label>
               <input
@@ -193,118 +237,107 @@ export const GetTokenPage: React.FC = () => {
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
                 placeholder={t('tokenFlow.agePlaceholder')}
-                className="w-full h-14 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                className="w-full h-16 px-4 text-3xl text-center rounded-xl border border-input bg-background font-bold focus:ring-2 focus:ring-primary focus:outline-none"
               />
             </div>
 
-            {/* Senior Care Auto Banner */}
+            {/* Senior Auto-detect Banner */}
             {isSenior && (
-              <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 font-bold flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-amber-600 flex-shrink-0" />
-                <span>{t('tokenFlow.seniorAutoBadge')}</span>
+              <div className="w-full p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-amber-900 font-bold flex items-center gap-3">
+                <Sparkles className="w-7 h-7 text-amber-500 flex-shrink-0" />
+                <div>
+                  <p className="text-lg font-extrabold">🌟 {t('tokenFlow.seniorAutoBadge')}</p>
+                  <p className="text-sm font-semibold mt-0.5 opacity-80">
+                    {t('tokenFlow.seniorAutoDesc', 'You will be given priority in the queue.')}
+                  </p>
+                </div>
               </div>
             )}
 
-            {/* Accessibility Checklist */}
-            <div className="pt-2 space-y-3">
-              <p className="font-bold text-foreground text-lg">
+            {/* Accessibility Cards */}
+            <div className="space-y-3 pt-1">
+              <p className="font-bold text-foreground text-xl">
                 {t('tokenFlow.accessibilityHeading')}
               </p>
 
-              <label className="flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer hover:bg-muted">
-                <input
-                  type="checkbox"
-                  checked={accessibility.includes('wheelchair')}
-                  onChange={() => toggleAccessibility('wheelchair')}
-                  className="w-6 h-6 rounded text-primary focus:ring-primary"
-                />
-                <Accessibility className="w-6 h-6 text-primary flex-shrink-0" />
-                <span className="font-semibold text-base">{t('tokenFlow.wheelchair')}</span>
-              </label>
-
-              <label className="flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer hover:bg-muted">
-                <input
-                  type="checkbox"
-                  checked={accessibility.includes('hearing')}
-                  onChange={() => toggleAccessibility('hearing')}
-                  className="w-6 h-6 rounded text-primary focus:ring-primary"
-                />
-                <VolumeX className="w-6 h-6 text-primary flex-shrink-0" />
-                <span className="font-semibold text-base">{t('tokenFlow.hearing')}</span>
-              </label>
-
-              <label className="flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer hover:bg-muted">
-                <input
-                  type="checkbox"
-                  checked={accessibility.includes('vision')}
-                  onChange={() => toggleAccessibility('vision')}
-                  className="w-6 h-6 rounded text-primary focus:ring-primary"
-                />
-                <Eye className="w-6 h-6 text-primary flex-shrink-0" />
-                <span className="font-semibold text-base">{t('tokenFlow.vision')}</span>
-              </label>
-
-              <label className="flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer hover:bg-muted">
-                <input
-                  type="checkbox"
-                  checked={accessibility.includes('assistance')}
-                  onChange={() => toggleAccessibility('assistance')}
-                  className="w-6 h-6 rounded text-primary focus:ring-primary"
-                />
-                <HeartHandshake className="w-6 h-6 text-primary flex-shrink-0" />
-                <span className="font-semibold text-base">{t('tokenFlow.assistance')}</span>
-              </label>
+              {accessibilityOptions.map(({ need, icon, label }) => {
+                const checked = accessibility.includes(need);
+                return (
+                  <label
+                    key={need}
+                    className={`flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-colors ${
+                      checked
+                        ? 'border-primary bg-primary/5'
+                        : 'border-border hover:border-primary/40 hover:bg-muted'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => toggleAccessibility(need)}
+                      className="w-7 h-7 rounded text-primary focus:ring-primary"
+                    />
+                    {icon}
+                    <span className="font-bold text-lg">{label}</span>
+                  </label>
+                );
+              })}
             </div>
 
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="w-1/3 h-14 border rounded-xl font-bold text-lg hover:bg-muted"
+                className="w-1/3 h-14 border-2 rounded-xl font-bold text-lg hover:bg-muted"
               >
-                Back
+                {t('common.back', 'Back')}
               </button>
               <button
                 type="submit"
-                className="w-2/3 h-14 bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md"
+                className="w-2/3 min-h-button-tall bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md flex items-center justify-center"
               >
-                Review & Confirm
+                {t('tokenFlow.reviewAndConfirm', 'Review & Confirm')}
               </button>
             </div>
           </form>
         )}
 
-        {/* STEP 3: Review & Confirm */}
+        {/* STEP 3: Review + Confirm */}
         {step === 3 && (
           <div className="space-y-6">
-            <div className="rounded-xl border p-4 bg-muted/50 space-y-3">
-              <div className="flex justify-between items-center border-b pb-2">
-                <span className="text-muted-foreground font-semibold">Patient Name</span>
+            <div className="rounded-xl border p-5 bg-muted/50 space-y-4">
+              <div className="flex justify-between items-center border-b pb-3">
+                <span className="text-muted-foreground font-semibold text-base">Patient Name</span>
                 <span className="font-bold text-foreground text-lg">{fullName}</span>
               </div>
-              <div className="flex justify-between items-center border-b pb-2">
-                <span className="text-muted-foreground font-semibold">Contact</span>
+              <div className="flex justify-between items-center border-b pb-3">
+                <span className="text-muted-foreground font-semibold text-base">Contact</span>
                 <span className="font-bold text-foreground text-lg">
                   {noPhone ? 'Desk Walk-In' : phone}
                 </span>
               </div>
-              <div className="flex justify-between items-center border-b pb-2">
-                <span className="text-muted-foreground font-semibold">Age</span>
-                <span className="font-bold text-foreground text-lg">
-                  {age} yrs {isSenior && '• Senior Care'}
+              <div className="flex justify-between items-center border-b pb-3">
+                <span className="text-muted-foreground font-semibold text-base">Age</span>
+                <span className="font-bold text-foreground text-lg flex items-center gap-2">
+                  {age} yrs
+                  {isSenior && (
+                    <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-sm font-bold border border-amber-300">
+                      ⭐ Senior
+                    </span>
+                  )}
                 </span>
               </div>
               {accessibility.length > 0 && (
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground font-semibold">Assistance</span>
-                  <span className="font-bold text-foreground">
+                  <span className="text-muted-foreground font-semibold text-base">Assistance</span>
+                  <span className="font-bold text-foreground text-base">
                     {accessibility.join(', ')}
                   </span>
                 </div>
               )}
             </div>
 
-            <p className="text-sm font-medium text-muted-foreground bg-muted p-3 rounded-lg">
+            <p className="text-sm font-medium text-muted-foreground bg-muted p-4 rounded-xl leading-relaxed">
               {t('tokenFlow.consentNotice')}
             </p>
 
@@ -313,18 +346,21 @@ export const GetTokenPage: React.FC = () => {
                 type="button"
                 onClick={() => setStep(2)}
                 disabled={loading}
-                className="w-1/3 h-14 border rounded-xl font-bold text-lg hover:bg-muted"
+                className="w-1/3 h-14 border-2 rounded-xl font-bold text-lg hover:bg-muted disabled:opacity-50"
               >
-                Back
+                {t('common.back', 'Back')}
               </button>
               <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-2/3 h-14 bg-emerald-600 text-white font-bold text-xl rounded-xl hover:bg-emerald-700 shadow-lg flex items-center justify-center gap-2"
+                className="w-2/3 min-h-button-tall bg-emerald-600 text-white font-bold text-xl rounded-xl hover:bg-emerald-700 shadow-lg flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? (
-                  <span>{t('common.loading')}</span>
+                  <>
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                    <span>{t('tokenFlow.joining', 'Joining queue...')}</span>
+                  </>
                 ) : (
                   <>
                     <Check className="w-6 h-6" />

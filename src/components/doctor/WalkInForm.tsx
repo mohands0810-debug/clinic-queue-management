@@ -189,3 +189,4 @@ export const WalkInForm: React.FC<WalkInFormProps> = ({ onSubmit, loading }) => 
     </div>
   );
 };
+

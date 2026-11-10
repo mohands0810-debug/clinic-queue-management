@@ -10,6 +10,8 @@
   </head>
   <body class="bg-background text-foreground antialiased min-h-screen">
     <div id="root"></div>
+    <!-- Portal target for modals — lives outside React root to escape all stacking contexts -->
+    <div id="modal-root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

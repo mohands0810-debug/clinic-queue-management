@@ -78,3 +78,4 @@ export const ThermalPrintSlip: React.FC<ThermalPrintSlipProps> = ({
     </div>
   );
 };
+

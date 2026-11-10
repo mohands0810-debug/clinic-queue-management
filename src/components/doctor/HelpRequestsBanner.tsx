@@ -96,3 +96,4 @@ export const HelpRequestsBanner: React.FC<HelpRequestsBannerProps> = ({ onResolv
     </div>
   );
 };
+

@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-10 - Phase 4: Patient Side Senior-Friendly Design System
+### Added
+- **HomePage** (`src/pages/HomePage.tsx`) — Senior-optimised home screen:
+  - Dynamic doctor status banner: amber alert box for `break` with delay reason, red for `emergency`, gray for `off_duty`, pulsing green dot when available.
+  - Now Serving hero card: token number at `text-7xl md:text-8xl font-black` with `animate-pulse` when `called`.
+  - Queue metrics bar with oversized `text-3xl font-extrabold` patient count and wait estimate.
+  - Get My Token CTA: `64px` tall full-width primary button with `text-xl md:text-2xl font-extrabold`.
+  - Full Supabase Realtime subscriptions on `tokens` and `clinic_settings`.
+- **GetTokenPage** (`src/pages/GetTokenPage.tsx`) — 3-step registration redesign:
+  - Visual step progress bar (3 dots: filled = done, pulsing = current, empty = future).
+  - `h-16 text-xl` oversized inputs throughout all steps.
+  - Auto-detect Senior Care: amber full-width banner appears instantly when age ≥ 60.
+  - Accessibility need cards as large `p-4 rounded-2xl border-2` tap targets with checked highlight (`border-primary bg-primary/5`).
+  - Review step with patient summary card, senior badge, consent notice, and 64px emerald Confirm button.
+  - Loading spinner + "Joining queue…" state on submit.
+- **StatusPage** (`src/pages/StatusPage.tsx`) — Live token tracker redesign:
+  - Token hero number at `text-8xl md:text-9xl font-black text-primary`.
+  - Full-width fixed-top bouncing emerald flash banner when `status === 'called'`: "🔔 Token #N — YOUR TURN! Please go in."
+  - Auto-speak via `speakText()` exactly once when status transitions to `'called'` (via `hasSpokenCalled` ref).
+  - Dynamically coloured status pills: waiting=blue, called=emerald+animate-pulse, in_progress=emerald, hold=amber, missed=red, completed=gray.
+  - All action buttons ≥ 56px height: "I Have Reached Clinic" (64px emerald), "Read to Me" (56px border), "Share on WhatsApp" (56px green).
+- **Bug fixes bundled in this phase**:
+  - `DelayBroadcastModal`: Portal now targets `#modal-root` div outside React root, with inline `z-index: 99999` bypassing all CSS stacking contexts including the sticky header's `backdrop-filter`.
+  - `index.html`: Added `<div id="modal-root"></div>` as a dedicated portal mount point.
+  - `Header.tsx`: Removed `backdrop-blur` / `backdrop-filter` from sticky header (was creating a stacking context trapping `position: fixed` modals).
+  - `DoctorPage.tsx`: `handleUpdateDoctorStatus` now uses `.eq('id', settings.id)` instead of `.match({ clinic_name: ... })` for reliable row targeting; `clinic_settings` Realtime subscription now calls `fetchConsoleData()` for a full authoritative refetch.
+  - `.env`: Fixed Supabase project URL typo (`hag` → `haq` in project ref `npgnnbquqehaqzhxvhss`).
+
 ## [0.4.0] - 2026-11-10 - Phase 3: Doctor Console (Queue Tab)
 ### Added
 - Complete interactive Doctor Console Queue management subsystem (`src/pages/DoctorPage.tsx`):

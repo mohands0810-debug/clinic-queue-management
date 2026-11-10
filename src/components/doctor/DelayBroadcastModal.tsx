@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { DoctorStatus } from '@/types/database';
 import { AlertTriangle, Clock, Coffee, X, Check } from 'lucide-react';
 
@@ -49,10 +50,14 @@ export const DelayBroadcastModal: React.FC<DelayBroadcastModalProps> = ({
         <span className="text-xs text-primary font-bold underline ml-1">Change</span>
       </button>
 
-      {/* Modal Dialog */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-card border rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-5">
+      {/* Modal Dialog — rendered in #modal-root outside React/header stacking contexts */}
+      {showModal && createPortal(
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center p-4"
+          style={{ zIndex: 99999 }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false); }}
+        >
+          <div className="bg-card border rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-5 relative" style={{ zIndex: 100000 }}>
             <div className="flex items-center justify-between border-b pb-3">
               <div>
                 <h3 className="font-extrabold text-xl text-foreground flex items-center gap-2">
@@ -179,7 +184,8 @@ export const DelayBroadcastModal: React.FC<DelayBroadcastModalProps> = ({
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.getElementById('modal-root') || document.body
       )}
     </>
   );

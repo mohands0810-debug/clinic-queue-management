@@ -1,17 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { computeWaitEstimateRPC, WaitEstimateResult } from '@/lib/queue-api';
 import { Token } from '@/types/database';
 import { useAccessibility } from '@/context/AccessibilityContext';
-import { 
-  ArrowLeft, 
-  Clock, 
-  MapPin, 
-  Share2, 
-  Volume2
-} from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, Share2, Volume2 } from 'lucide-react';
 
 export const StatusPage: React.FC = () => {
   const { t } = useTranslation();
@@ -31,11 +25,13 @@ export const StatusPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Track whether we've already spoken the "called" alert to avoid repeating
+  const hasSpokenCalled = useRef<boolean>(false);
+
   useEffect(() => {
     if (tokenId) {
       fetchTokenDetails(tokenId);
 
-      // Listen for real-time status updates on this specific token
       const channel = supabase
         .channel(`token-${tokenId}`)
         .on(
@@ -50,7 +46,6 @@ export const StatusPage: React.FC = () => {
             const updated = payload.new as Token;
             setToken(updated);
             setHasReached(updated.arrived_at_clinic);
-            // Recompute wait estimate on status update
             computeWaitEstimateRPC(tokenId)
               .then((est) => {
                 setWaitEstimate(est);
@@ -70,6 +65,14 @@ export const StatusPage: React.FC = () => {
     }
   }, [tokenId]);
 
+  // Auto-speak when status becomes 'called' for the first time
+  useEffect(() => {
+    if (token?.status === 'called' && !hasSpokenCalled.current) {
+      hasSpokenCalled.current = true;
+      speakText(t('status.calledSpoken', { num: token.token_number }));
+    }
+  }, [token?.status, token?.token_number, speakText, t]);
+
   const fetchTokenDetails = async (id: string) => {
     setLoading(true);
     try {
@@ -83,7 +86,6 @@ export const StatusPage: React.FC = () => {
         setToken(data as Token);
         setHasReached(data.arrived_at_clinic);
 
-        // Fetch dynamic wait estimate via RPC
         try {
           const est = await computeWaitEstimateRPC(id);
           setWaitEstimate(est);
@@ -142,7 +144,9 @@ export const StatusPage: React.FC = () => {
 
   const handleReadStatus = () => {
     if (!token) return;
-    const statusLabel = t(`status.state${token.status.charAt(0).toUpperCase() + token.status.slice(1)}`);
+    const statusLabel = t(
+      `status.state${token.status.charAt(0).toUpperCase() + token.status.slice(1)}`
+    );
     const statusMsg = t('status.statusSpoken', {
       num: token.token_number,
       status: statusLabel,
@@ -152,8 +156,67 @@ export const StatusPage: React.FC = () => {
     speakText(statusMsg);
   };
 
+  // Derive status badge config
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'waiting':
+        return {
+          text: t('status.stateWaiting'),
+          className: 'bg-blue-100 text-blue-800 border-blue-300',
+          pulse: false,
+        };
+      case 'called':
+        return {
+          text: `🔔 ${t('status.stateCalled')}`,
+          className: 'bg-emerald-100 text-emerald-800 border-emerald-400 animate-pulse',
+          pulse: true,
+        };
+      case 'in_progress':
+        return {
+          text: t('status.stateInProgress'),
+          className: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+          pulse: false,
+        };
+      case 'hold':
+        return {
+          text: t('status.stateHold'),
+          className: 'bg-amber-100 text-amber-800 border-amber-300',
+          pulse: false,
+        };
+      case 'missed':
+        return {
+          text: t('status.stateMissed'),
+          className: 'bg-red-100 text-red-800 border-red-300',
+          pulse: false,
+        };
+      case 'completed':
+        return {
+          text: t('status.stateCompleted'),
+          className: 'bg-gray-100 text-gray-700 border-gray-300',
+          pulse: false,
+        };
+      default:
+        return {
+          text: status,
+          className: 'bg-muted text-foreground border-border',
+          pulse: false,
+        };
+    }
+  };
+
+  const isCalled = token?.status === 'called';
+
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+    <div className={`max-w-2xl mx-auto px-4 py-6 space-y-6 ${isCalled ? 'pt-24' : ''}`}>
+
+      {/* Called Flash Banner — fixed top of page */}
+      {isCalled && token && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-emerald-500 text-white text-center py-4 px-6 font-black text-xl animate-bounce shadow-2xl">
+          🔔 Token #{token.token_number} — YOUR TURN! Please go in.
+        </div>
+      )}
+
+      {/* Back Navigation */}
       <div className="flex items-center justify-between">
         <Link
           to="/"
@@ -165,105 +228,102 @@ export const StatusPage: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="bg-card border rounded-2xl p-8 text-center text-xl font-bold text-muted-foreground animate-pulse">
+        <div className="bg-card border rounded-2xl p-10 text-center text-2xl font-bold text-muted-foreground animate-pulse">
           {t('common.loading')}
         </div>
       ) : !tokenId || !token ? (
+        /* Manual Token Search */
         <div className="bg-card border rounded-2xl p-6 shadow-sm space-y-5 text-center">
-          <h2 className="text-2xl font-bold">{t('home.checkMyToken')}</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-2xl font-extrabold">{t('home.checkMyToken')}</h2>
+          <p className="text-muted-foreground text-lg font-medium">
             Enter your token number to view your live queue position:
           </p>
-          <form onSubmit={handleManualSearch} className="flex gap-2 max-w-sm mx-auto">
+          <form onSubmit={handleManualSearch} className="flex gap-3 max-w-sm mx-auto">
             <input
               type="number"
               placeholder="e.g. 14"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 h-14 px-4 text-xl border rounded-xl"
+              className="flex-1 h-16 px-4 text-2xl border-2 rounded-xl font-bold text-center focus:ring-2 focus:ring-primary focus:outline-none"
             />
             <button
               type="submit"
-              className="px-6 h-14 bg-primary text-primary-foreground font-bold rounded-xl"
+              className="px-6 h-16 bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md"
             >
               Check
             </button>
           </form>
         </div>
       ) : (
-        <div className="space-y-6">
-          {/* Main Status Hero Card */}
+        <div className="space-y-5">
+          {/* Token Hero Card */}
           <div className="bg-card border-2 border-primary/20 rounded-2xl p-6 text-center shadow-lg space-y-4">
             <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
               {t('status.myToken')}
             </span>
 
-            <div className="text-7xl md:text-9xl font-black text-primary tracking-tight">
+            <div className="text-8xl md:text-9xl font-black text-primary tracking-tight leading-none py-2">
               #{token.token_number}
             </div>
 
             {/* Status Badge */}
-            <div className="inline-block px-4 py-1.5 rounded-full text-lg font-bold bg-primary/10 text-primary">
-              {token.status === 'waiting' && t('status.stateWaiting')}
-              {token.status === 'called' && (
-                <span className="text-emerald-600 animate-pulse">
-                  {t('status.stateCalled')}
-                </span>
-              )}
-              {token.status === 'in_progress' && t('status.stateInProgress')}
-              {token.status === 'hold' && t('status.stateHold')}
-              {token.status === 'missed' && (
-                <span className="text-destructive font-bold">
-                  {t('status.stateMissed')}
-                </span>
-              )}
-              {token.status === 'completed' && t('status.stateCompleted')}
-            </div>
+            {(() => {
+              const badge = getStatusBadge(token.status);
+              return (
+                <div
+                  className={`inline-block px-5 py-2 rounded-full text-lg font-extrabold border-2 ${badge.className}`}
+                >
+                  {badge.text}
+                </div>
+              );
+            })()}
 
             {/* Queue Metrics */}
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border max-w-md mx-auto">
-              <div>
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border max-w-sm mx-auto">
+              <div className="text-center">
                 <p className="text-sm font-semibold text-muted-foreground">
                   {t('status.patientsAhead')}
                 </p>
-                <p className="text-3xl font-extrabold text-foreground">
-                  {patientsAhead}
-                </p>
+                <p className="text-3xl font-extrabold text-foreground">{patientsAhead}</p>
               </div>
-              <div>
+              <div className="text-center">
                 <p className="text-sm font-semibold text-muted-foreground">
                   {t('status.estimatedWait')}
                 </p>
-                <p className="text-3xl font-extrabold text-foreground">
-                  ~{estimatedWaitMins} mins
-                </p>
+                <p className="text-3xl font-extrabold text-foreground">~{estimatedWaitMins} mins</p>
                 {waitEstimate && (
-                  <p className="text-xs text-muted-foreground font-medium">
-                    (could be {waitEstimate.range_min}–{waitEstimate.range_max} mins)
+                  <p className="text-xs text-muted-foreground font-medium mt-0.5">
+                    ({waitEstimate.range_min}–{waitEstimate.range_max} mins)
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Delay Transparency Note */}
+            {/* Delay Note */}
             {waitEstimate?.delay_note && (
-              <div className="p-3 bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+              <div className="p-3 bg-amber-50 border border-amber-300 text-amber-800 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
                 <span>⚠️ {waitEstimate.delay_note}</span>
               </div>
             )}
 
-            {/* Arrival Guidance */}
-            <div className="p-3 bg-muted rounded-xl text-foreground font-semibold flex items-center justify-center gap-2">
+            {/* Arrival Time Guidance */}
+            <div className="p-3 bg-muted rounded-xl text-foreground font-semibold flex items-center justify-center gap-2 text-base">
               <Clock className="w-5 h-5 text-primary" />
               <span>
-                {t('status.suggestedArrival')}: {waitEstimate?.come_by_time ? new Date(waitEstimate.come_by_time).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '15 mins before call'}
+                {t('status.suggestedArrival')}:{' '}
+                {waitEstimate?.come_by_time
+                  ? new Date(waitEstimate.come_by_time).toLocaleTimeString('en-IN', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
+                  : '15 mins before call'}
               </span>
             </div>
           </div>
 
           {/* Action Buttons */}
           <div className="space-y-3">
-            {/* Reached Clinic Button */}
+            {/* I Have Reached Clinic */}
             <button
               onClick={handleMarkReached}
               disabled={hasReached}
@@ -275,25 +335,23 @@ export const StatusPage: React.FC = () => {
             >
               <MapPin className="w-6 h-6" />
               <span>
-                {hasReached
-                  ? t('status.reachedConfirmed')
-                  : t('status.reachedButton')}
+                {hasReached ? t('status.reachedConfirmed') : t('status.reachedButton')}
               </span>
             </button>
 
-            {/* Read to Me Button */}
+            {/* Read to Me */}
             <button
               onClick={handleReadStatus}
-              className="w-full h-14 border-2 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-muted"
+              className="w-full h-14 border-2 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-muted transition-colors"
             >
               <Volume2 className="w-5 h-5 text-primary" />
               <span>{t('common.readToMe')}</span>
             </button>
 
-            {/* WhatsApp Family Share */}
+            {/* WhatsApp Share */}
             <button
               onClick={handleShareWhatsApp}
-              className="w-full h-14 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-lg flex items-center justify-center gap-2 shadow-sm"
+              className="w-full h-14 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-lg flex items-center justify-center gap-2 shadow-sm transition-colors"
             >
               <Share2 className="w-5 h-5" />
               <span>{t('status.shareWhatsApp')}</span>
