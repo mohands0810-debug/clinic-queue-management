@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-10 - Phase 7: PWA Offline Support, Performance Optimization & Production Deployment
+### Added
+- **Progressive Web App (PWA) Engine**:
+  - Configured `vite-plugin-pwa` with `generateSW` strategy and automatic background updates (`autoUpdate`).
+  - Pre-cached all application assets, stylesheets, scripts, and multilingual locale catalogs for offline consultation tracking.
+  - Runtime NetworkFirst caching on Supabase PostgREST endpoints (`https://*.supabase.co/rest/v1/*`) with 5-minute fallback cache for spotty clinic network conditions.
+  - Web App Manifest (`public/manifest.webmanifest`) with standalone mobile window display, high-contrast theme color (`#0F4C81`), and home screen shortcuts (`Get My Token`, `Check My Token`).
+  - Generated PNG PWA icons (`public/icons/icon-192.png` and `public/icons/icon-512.png`) with medical cross Dhanvantri iconography.
+  - Linked iOS `apple-touch-icon` and mobile meta tags in `index.html`.
+- **Performance & Rollup Optimization**:
+  - Implemented manual chunking (`vendor-react`, `vendor-supabase`, `vendor-i18n`, `vendor-icons`) in `vite.config.ts`, reducing main application entry bundle size to 120 kB and eliminating all chunk size advisory warnings.
+- **Production Deployment Assets**:
+  - Authored comprehensive production deployment manual (`docs/12-deployment-guide.md`) covering Vercel Edge, Netlify, Supabase RLS security verification, and Dr Yogesh's clinic hardware (waiting room TV HDMI mini-PC kiosk mode and silent thermal receipt printing `--kiosk-printing`).
+  - Created `vercel.json` and `public/_redirects` for zero-configuration client-side SPA routing across hosting platforms.
+
 ## [0.7.0] - 2026-11-10 - Phase 6: Reports & Clinic Settings
 ### Added
 - **ReportsTab** (`src/components/doctor/ReportsTab.tsx`) — Clinical analytics dashboard:

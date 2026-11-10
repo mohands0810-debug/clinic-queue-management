@@ -171,25 +171,29 @@ dhanvantri-clinic/
 2. Select build framework preset: **Vite**.
 3. Set the build command: `npm run build` and publish directory: `dist`.
 4. Configure production environment variables matching `.env.example`.
+5. For complete step-by-step instructions, see [`docs/12-deployment-guide.md`](docs/12-deployment-guide.md).
 
-### Backend (Supabase Free Tier)
-1. Deploy PostgreSQL schemas via the Supabase SQL editor or CLI migrations.
-2. Deploy Supabase Edge Functions (`supabase functions deploy`).
-3. Enable Realtime replication on the `tokens`, `clinic_settings`, and `help_requests` tables.
+### Backend (Supabase Cloud)
+1. Execute `supabase/migrations/FULL_DATABASE_SETUP.sql` in the Supabase SQL Editor.
+2. Ensure Realtime publication is active: `ALTER PUBLICATION supabase_realtime ADD TABLE tokens, clinic_settings, help_requests;`.
+3. Apply stored procedure fixes (`supabase/migrations/20261110000009_fix_call_next.sql`).
 
 ---
 
-## 8. Interface Screenshots
+## 8. Development Roadmap & Phase Status
 
-*(Application screenshots will be added as frontend implementation phases complete.)*
+All 8 development phases have been completed, verified, and committed:
 
-| Screen | Preview | Description |
-| :--- | :---: | :--- |
-| **Patient Home** | *[Phase 4]* | High-contrast, large touch action buttons with language selector |
-| **Live Token Status** | *[Phase 4]* | Real-time position, honest wait range, and "Come later" time |
-| **Waiting Room TV Board** | *[Phase 6]* | High-contrast TV display with spoken announcements & QR code |
-| **Doctor Console (Queue)**| *[Phase 3]* | Real-time patient flow controller, walk-in generator & help alerts |
-| **Reports & Analytics** | *[Phase 6]* | Peak hour distribution, wait duration trends, and CSV export |
+| Phase | Description | Status | Verification & Deliverables |
+|:---:|:---|:---:|:---|
+| **Phase 0** | Project Setup & Comprehensive Architecture Docs | ✅ Complete | Complete SRS (`docs/01-11`), licenses, and README |
+| **Phase 1** | Scaffolding, i18n, DB Schema & RLS Migrations | ✅ Complete | React 18 + Vite + TS, Supabase tables, safe public view, RLS |
+| **Phase 2** | Atomic PostgreSQL RPC Backend & Authentication | ✅ Complete | Advisory locks, `create_token`, `call_next` 3:1 senior interleave, audit triggers |
+| **Phase 3** | Doctor Console — Live Queue Operational Tab | ✅ Complete | Active room timer, walk-in generator, thermal print, queue reorder |
+| **Phase 4** | Patient Side Senior-Friendly Design System | ✅ Complete | Oversized touch targets (64px), 3-step registration, auto-call screen flash |
+| **Phase 5** | Public TV Waiting Room Board (`/display`) | ✅ Complete | Fullscreen 16rem token display, bilingual Kannada/English chime announcements, QR code |
+| **Phase 6** | Operational Analytics Reports & Clinic Settings | ✅ Complete | Hourly throughput histogram, status percentages, CSV export, live configuration |
+| **Phase 7** | PWA Offline Support, Performance & Deployment | ✅ Complete | Service worker precaching, manual vendor chunking, PWA icons, deployment guide |
 
 ---
 

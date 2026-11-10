@@ -1,0 +1,44 @@
+{
+  "name": "Dhanvantri Clinic Queue",
+  "short_name": "DhanvantriQ",
+  "description": "Digital queue management for Dhanvantri Clinic, Dr Yogesh, BTM Layout, Bengaluru",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0F4C81",
+  "orientation": "portrait-primary",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Get My Token",
+      "short_name": "Get Token",
+      "description": "Join the queue instantly",
+      "url": "/get-token",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Check My Token",
+      "short_name": "My Status",
+      "description": "View your live queue position",
+      "url": "/status",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "categories": ["health", "medical", "utilities"],
+  "screenshots": []
+}
+
