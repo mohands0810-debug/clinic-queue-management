@@ -142,7 +142,13 @@ export const StatusPage: React.FC = () => {
 
   const handleReadStatus = () => {
     if (!token) return;
-    const statusMsg = `Your token number is ${token.token_number}. Current status: ${token.status}. There are ${patientsAhead} patients ahead of you. Estimated wait is about ${estimatedWaitMins} minutes.`;
+    const statusLabel = t(`status.state${token.status.charAt(0).toUpperCase() + token.status.slice(1)}`);
+    const statusMsg = t('status.statusSpoken', {
+      num: token.token_number,
+      status: statusLabel,
+      ahead: patientsAhead,
+      wait: estimatedWaitMins,
+    });
     speakText(statusMsg);
   };
 

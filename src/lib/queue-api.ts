@@ -182,3 +182,4 @@ export async function computeWaitEstimateRPC(tokenId: string): Promise<WaitEstim
 
   return data as WaitEstimateResult;
 }
+

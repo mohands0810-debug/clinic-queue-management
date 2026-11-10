@@ -88,10 +88,10 @@ export const HomePage: React.FC = () => {
 
   const handleReadStatus = () => {
     const servingText = currentServing
-      ? `${t('home.nowServing')}: Token number ${currentServing.token_number}.`
-      : 'Currently no consultations in progress.';
-    const waitText = `${waitingCount} ${t('home.patientsInLine')}.`;
-    speakText(`${t('clinic.name')}. ${servingText} ${waitText}`);
+      ? t('home.servingSpoken', { num: currentServing.token_number })
+      : t('home.noActiveSpoken');
+    const waitText = t('home.waitingSpoken', { count: waitingCount });
+    speakText(`${t('clinic.name')}, ${t('clinic.doctor')}. ${servingText} ${waitText}`);
   };
 
   return (

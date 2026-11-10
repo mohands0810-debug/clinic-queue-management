@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-card text-card-foreground shadow-sm px-4 py-3">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 text-foreground shadow-sm px-4 py-3 mb-4">
       <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
         {/* Clinic Identity */}
         <Link to="/" className="flex items-center gap-2 group">

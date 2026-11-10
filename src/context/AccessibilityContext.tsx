@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface AccessibilityContextType {
@@ -8,7 +8,7 @@ interface AccessibilityContextType {
   resetFontSize: () => void;
   isHighContrast: boolean;
   toggleHighContrast: () => void;
-  speakText: (text: string) => void;
+  speakText: (text: string, overrideLang?: string) => void;
   isSpeaking: boolean;
 }
 
@@ -17,7 +17,6 @@ const AccessibilityContext = createContext<AccessibilityContextType | undefined>
 export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { i18n } = useTranslation();
   
-  // Font scale: 1.0 (base 20px) up to 1.4 (28px)
   const [fontScale, setFontScale] = useState<number>(() => {
     const saved = localStorage.getItem('dhanvantri_font_scale');
     return saved ? parseFloat(saved) : 1.0;
@@ -29,6 +28,28 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+
+  // Load and cache voices when browser is ready
+  useEffect(() => {
+    if (!('speechSynthesis' in window)) return;
+
+    const loadVoices = () => {
+      const available = window.speechSynthesis.getVoices();
+      if (available && available.length > 0) {
+        voicesRef.current = available;
+      }
+    };
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--font-scale', fontScale.toString());
@@ -60,26 +81,74 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsHighContrast((prev) => !prev);
   };
 
-  const speakText = (text: string) => {
+  /**
+   * Intelligently selects the best voice for the chosen language.
+   * If native Kannada voice is absent on Windows, falls back to Indic/Hindi voice before English.
+   */
+  const findBestVoice = (targetLang: string): { voice: SpeechSynthesisVoice | null; bcp47: string } => {
+    const voices = voicesRef.current.length > 0 
+      ? voicesRef.current 
+      : (typeof window !== 'undefined' && 'speechSynthesis' in window ? window.speechSynthesis.getVoices() : []);
+
+    const langLower = targetLang.toLowerCase();
+
+    if (langLower.startsWith('kn')) {
+      // 1. Direct Kannada voice
+      const knVoice = voices.find(
+        (v) => v.lang.toLowerCase().includes('kn') || v.name.toLowerCase().includes('kannada')
+      );
+      if (knVoice) return { voice: knVoice, bcp47: 'kn-IN' };
+
+      // 2. Fallback to Indian English or Hindi which understands Indian names & numbers
+      const hiVoice = voices.find(
+        (v) => v.lang.toLowerCase().includes('hi') || v.name.toLowerCase().includes('hindi')
+      );
+      if (hiVoice) return { voice: hiVoice, bcp47: 'hi-IN' };
+
+      const inVoice = voices.find((v) => v.lang.toLowerCase().includes('en-in') || v.name.toLowerCase().includes('india'));
+      if (inVoice) return { voice: inVoice, bcp47: 'en-IN' };
+
+      return { voice: null, bcp47: 'kn-IN' };
+    }
+
+    if (langLower.startsWith('hi')) {
+      const hiVoice = voices.find(
+        (v) => v.lang.toLowerCase().includes('hi') || v.name.toLowerCase().includes('hindi')
+      );
+      if (hiVoice) return { voice: hiVoice, bcp47: 'hi-IN' };
+
+      const inVoice = voices.find((v) => v.lang.toLowerCase().includes('en-in') || v.name.toLowerCase().includes('india'));
+      if (inVoice) return { voice: inVoice, bcp47: 'hi-IN' };
+
+      return { voice: null, bcp47: 'hi-IN' };
+    }
+
+    // Default English
+    const enInVoice = voices.find((v) => v.lang.toLowerCase().includes('en-in'));
+    if (enInVoice) return { voice: enInVoice, bcp47: 'en-IN' };
+
+    const enVoice = voices.find((v) => v.lang.toLowerCase().startsWith('en'));
+    return { voice: enVoice || null, bcp47: 'en-IN' };
+  };
+
+  const speakText = (text: string, overrideLang?: string) => {
     if (!('speechSynthesis' in window)) {
       console.warn('Speech synthesis not supported in this browser.');
       return;
     }
 
-    window.speechSynthesis.cancel(); // Stop any ongoing speech
+    window.speechSynthesis.cancel(); // Cancel any ongoing speech
+
+    const targetLang = overrideLang || i18n.language || 'en';
+    const { voice, bcp47 } = findBestVoice(targetLang);
+
     const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Set language based on active i18n language
-    const currentLang = i18n.language || 'en';
-    if (currentLang.startsWith('kn')) {
-      utterance.lang = 'kn-IN';
-    } else if (currentLang.startsWith('hi')) {
-      utterance.lang = 'hi-IN';
-    } else {
-      utterance.lang = 'en-IN';
+    utterance.lang = bcp47;
+    if (voice) {
+      utterance.voice = voice;
     }
 
-    utterance.rate = 0.9; // Slightly slower for elderly comprehension
+    utterance.rate = 0.85; // Calibrated speed for senior clarity
     utterance.pitch = 1.0;
 
     utterance.onstart = () => setIsSpeaking(true);
@@ -114,4 +183,3 @@ export const useAccessibility = (): AccessibilityContextType => {
   }
   return context;
 };
-

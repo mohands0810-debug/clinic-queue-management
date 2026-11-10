@@ -41,7 +41,10 @@
     "tokenSubtitle": "Takes only 30 seconds • No app needed",
     "averageWait": "Average Wait",
     "minsPerPatient": "mins / patient",
-    "patientsInLine": "patients waiting"
+    "patientsInLine": "patients waiting",
+    "servingSpoken": "Now serving token number {{num}}.",
+    "noActiveSpoken": "Currently no consultations in progress. Ready for next patient.",
+    "waitingSpoken": "{{count}} patients waiting in line."
   },
   "tokenFlow": {
     "title": "Get Your Queue Token",
@@ -80,7 +83,8 @@
     "stateHold": "Turn on Hold (Stepped out)",
     "stateMissed": "Turn Missed - 5 Min Grace Period Active",
     "stateCompleted": "Consultation Completed",
-    "stateCancelled": "Token Cancelled"
+    "stateCancelled": "Token Cancelled",
+    "statusSpoken": "Your token number is {{num}}. Current status: {{status}}. There are {{ahead}} patients ahead of you. Estimated wait is about {{wait}} minutes."
   },
   "display": {
     "nowServing": "NOW SERVING",
