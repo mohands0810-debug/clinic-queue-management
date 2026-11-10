@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-10 - Phase 5: TV Display Board
+### Added
+- **DisplayPage** (`src/pages/DisplayPage.tsx`) — Full clinic waiting-room TV board rewrite:
+  - **Zone 1 — Top Bar**: Clinic name (`text-5xl font-black`) + doctor/address, live `HH:MM:SS` clock via `setInterval` (`text-6xl font-mono text-primary`), doctor status pill (emerald/amber/red/slate with pulsing dot).
+  - **Zone 2 — Main Grid (60/40 split)**:
+    - *Left — Now Serving Card*: Token number at `text-[16rem]` — fills the card. `animate-pulse` on number when `called`; `animate-bounce` "🔔 PLEASE PROCEED TO DOCTOR'S ROOM" banner. `in_progress` shows "⚕ CONSULTATION IN PROGRESS". Senior golden badge (`✦ SENIOR CITIZEN PRIORITY`). Accessibility need pills (♿ wheelchair, 🔇 hearing, 👁 vision, 🤝 assistance). Empty state "Ready for Next Patient / Doctor will call shortly".
+    - *Auto-announcement*: `useRef` tracks last announced token. On new `called` token: plays 440→880 Hz Web Audio chime, then Kannada speech `ಟೋಕನ್ ಸಂಖ್ಯೆ N, ದಯವಿಟ್ಟು ವೈದ್ಯರ ಕೋಣೆಗೆ ಬನ್ನಿ.` followed by English `Token number N, please proceed to the doctor's room.`
+    - *Right — Upcoming Queue*: Up to 6 waiting/hold tokens with position badge, `text-4xl` token number, initials, SENIOR and HOLD badges. Dividers between rows.
+    - *Right — QR Code*: `QRCodeSVG` size=130, links to `/get-token`. "📱 SCAN TO JOIN QUEUE" with clinic URL.
+  - **Zone 3 — Bottom Ticker**: Clinic hours, pulsing green "● LIVE" indicator, KSIT CSE attribution.
+  - Standalone dark layout (`bg-slate-950`) — no shared Header component rendered.
+  - Supabase Realtime on `tokens` and `clinic_settings` — full refetch on any change.
+  - Clock interval cleaned up on unmount.
+
 ## [0.5.0] - 2026-11-10 - Phase 4: Patient Side Senior-Friendly Design System
 ### Added
 - **HomePage** (`src/pages/HomePage.tsx`) — Senior-optimised home screen:
