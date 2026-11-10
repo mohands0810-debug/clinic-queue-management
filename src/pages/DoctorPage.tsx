@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/context/AuthContext';
+import { 
+  callNextRPC, 
+  startConsultationRPC, 
+  completeConsultationRPC, 
+  markMissedRPC, 
+  holdTurnRPC, 
+  createTokenRPC 
+} from '@/lib/queue-api';
 import { Token, ClinicSettings } from '@/types/database';
 import { 
   Users, 
@@ -16,19 +25,21 @@ import {
 
 export const DoctorPage: React.FC = () => {
   const { t } = useTranslation();
+  const { user, profile, isDoctor, signIn, signOut } = useAuth();
 
-  // Authentication state
-  const [session, setSession] = useState<unknown>(null);
+  // Authentication dialog state
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [authLoading, setAuthLoading] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
-  // Active tab
+  // Active tab & queue state
   const [activeTab, setActiveTab] = useState<'queue' | 'reports' | 'settings'>('queue');
   const [tokens, setTokens] = useState<Token[]>([]);
   const [settings, setSettings] = useState<ClinicSettings | null>(null);
+  const [actionLoading, setActionLoading] = useState<boolean>(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // Walk-in form states
   const [walkInName, setWalkInName] = useState<string>('');
@@ -36,19 +47,22 @@ export const DoctorPage: React.FC = () => {
   const [walkInSenior, setWalkInSenior] = useState<boolean>(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
     fetchConsoleData();
 
-    return () => subscription.unsubscribe();
+    // Subscribe to realtime tokens changes
+    const channel = supabase
+      .channel('doctor-console-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tokens' }, () => {
+        fetchConsoleData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'clinic_settings' }, (p) => {
+        setSettings(p.new as ClinicSettings);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchConsoleData = async () => {
@@ -75,19 +89,103 @@ export const DoctorPage: React.FC = () => {
     setAuthLoading(true);
     setAuthError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
+    const { error } = await signIn(email, password);
     if (error) {
       setAuthError(error.message);
+    } else {
+      setShowLoginModal(false);
     }
     setAuthLoading(false);
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  // RPC Actions
+  const handleCallNext = async () => {
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      await callNextRPC(user?.id);
+      await fetchConsoleData();
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? err.message : 'Error calling next patient');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleStart = async (tokenId: string) => {
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      await startConsultationRPC(tokenId);
+      await fetchConsoleData();
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? err.message : 'Error starting consultation');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleComplete = async (tokenId: string) => {
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      await completeConsultationRPC(tokenId);
+      await fetchConsoleData();
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? err.message : 'Error completing consultation');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleHold = async (tokenId: string) => {
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      await holdTurnRPC(tokenId, 10);
+      await fetchConsoleData();
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? err.message : 'Error holding turn');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleMissed = async (tokenId: string) => {
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      await markMissedRPC(tokenId);
+      await fetchConsoleData();
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? err.message : 'Error marking missed turn');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleAddWalkIn = async () => {
+    if (!walkInName.trim()) return;
+    const ageNum = parseInt(walkInAge, 10) || 30;
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      await createTokenRPC({
+        fullName: walkInName.trim(),
+        age: ageNum,
+        accessibility: [],
+        source: 'doctor_desk',
+      });
+      setWalkInName('');
+      setWalkInAge('');
+      setWalkInSenior(false);
+      await fetchConsoleData();
+      window.print(); // Print thermal receipt slip
+    } catch (err: unknown) {
+      setActionError(err instanceof Error ? err.message : 'Error adding walk-in patient');
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const activePatient = tokens.find((t) => t.status === 'in_progress' || t.status === 'called');
@@ -138,14 +236,19 @@ export const DoctorPage: React.FC = () => {
           </button>
         </div>
 
-        {session ? (
-          <button
-            onClick={handleLogout}
-            className="px-3 py-1.5 border rounded-lg text-sm font-bold flex items-center gap-1.5 hover:bg-muted text-destructive"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
-          </button>
+        {user ? (
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 text-xs font-bold">
+              {profile ? `${profile.full_name} (${profile.role})` : user.email}
+            </span>
+            <button
+              onClick={signOut}
+              className="px-3 py-1.5 border rounded-lg text-sm font-bold flex items-center gap-1.5 hover:bg-muted text-destructive"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Sign Out</span>
+            </button>
+          </div>
         ) : (
           <button
             onClick={() => setShowLoginModal(true)}
@@ -266,24 +369,54 @@ export const DoctorPage: React.FC = () => {
                 </div>
               )}
 
+              {actionError && (
+                <div className="p-3 mb-3 bg-destructive/10 text-destructive text-sm font-semibold rounded-lg flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>{actionError}</span>
+                </div>
+              )}
+
               {/* Action Buttons */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t">
-                <button className="h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow">
+                <button 
+                  onClick={handleCallNext}
+                  disabled={actionLoading}
+                  className="h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow disabled:opacity-50"
+                >
                   {t('doctor.callNext')}
                 </button>
-                <button className="h-14 bg-primary hover:bg-primary-700 text-white font-bold rounded-xl shadow">
+                <button 
+                  onClick={() => activePatient && handleStart(activePatient.id)}
+                  disabled={actionLoading || !activePatient || activePatient.status === 'in_progress'}
+                  className="h-14 bg-primary hover:bg-primary-700 text-white font-bold rounded-xl shadow disabled:opacity-50"
+                >
                   {t('doctor.start')}
                 </button>
-                <button className="h-14 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow">
+                <button 
+                  onClick={() => activePatient && handleComplete(activePatient.id)}
+                  disabled={actionLoading || !activePatient}
+                  className="h-14 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow disabled:opacity-50"
+                >
                   {t('doctor.complete')}
                 </button>
-                <button className="h-14 border rounded-xl font-bold hover:bg-muted text-amber-600">
+                <button 
+                  onClick={() => activePatient && handleHold(activePatient.id)}
+                  disabled={actionLoading || !activePatient}
+                  className="h-14 border rounded-xl font-bold hover:bg-muted text-amber-600 disabled:opacity-50"
+                >
                   {t('doctor.holdTurn')}
                 </button>
-                <button className="h-14 border rounded-xl font-bold hover:bg-muted text-destructive">
+                <button 
+                  onClick={() => activePatient && handleMissed(activePatient.id)}
+                  disabled={actionLoading || !activePatient}
+                  className="h-14 border rounded-xl font-bold hover:bg-muted text-destructive disabled:opacity-50"
+                >
                   {t('doctor.markMissed')}
                 </button>
-                <button className="h-14 border rounded-xl font-bold hover:bg-muted">
+                <button 
+                  disabled={actionLoading}
+                  className="h-14 border rounded-xl font-bold hover:bg-muted disabled:opacity-50"
+                >
                   {t('doctor.delayBroadcast')}
                 </button>
               </div>
@@ -381,10 +514,12 @@ export const DoctorPage: React.FC = () => {
 
                 <button
                   type="button"
-                  className="w-full h-14 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 shadow"
+                  onClick={handleAddWalkIn}
+                  disabled={actionLoading || !walkInName.trim()}
+                  className="w-full h-14 bg-primary text-primary-foreground font-bold rounded-xl flex items-center justify-center gap-2 shadow hover:bg-primary-700 disabled:opacity-50"
                 >
                   <Printer className="w-5 h-5" />
-                  <span>{t('doctor.printSlip')}</span>
+                  <span>{actionLoading ? 'Creating...' : t('doctor.printSlip')}</span>
                 </button>
               </div>
             </div>
@@ -422,14 +557,20 @@ export const DoctorPage: React.FC = () => {
         </div>
       )}
 
-      {/* Settings Tab Placeholder (Phase 6 full build) */}
+      {/* Settings Tab Placeholder with Role Guard */}
       {activeTab === 'settings' && (
         <div className="bg-card border rounded-2xl p-8 text-center space-y-3">
           <SettingsIcon className="w-12 h-12 text-primary mx-auto" />
           <h2 className="text-2xl font-bold">Clinic Configuration Settings</h2>
-          <p className="text-muted-foreground max-w-md mx-auto">
-            Doctor consultation duration, grace period, buffer times, and interactive Simulation Mode will be activated in Phase 6.
-          </p>
+          {!isDoctor ? (
+            <div className="p-4 bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 border border-amber-300 rounded-xl font-bold max-w-md mx-auto">
+              Helper Access Restricted: Settings can only be modified by Dr Yogesh (Doctor role).
+            </div>
+          ) : (
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Doctor consultation duration, grace period, buffer times, and interactive Simulation Mode will be activated in Phase 6.
+            </p>
+          )}
         </div>
       )}
     </div>

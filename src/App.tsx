@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AccessibilityProvider } from '@/context/AccessibilityContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { Header } from '@/components/common/Header';
 import { HomePage } from '@/pages/HomePage';
 import { GetTokenPage } from '@/pages/GetTokenPage';
@@ -22,20 +23,23 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 export const App: React.FC = () => {
   return (
-    <AccessibilityProvider>
-      <BrowserRouter>
-        <AppLayout>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/get-token" element={<GetTokenPage />} />
-            <Route path="/status" element={<StatusPage />} />
-            <Route path="/display" element={<DisplayPage />} />
-            <Route path="/doctor" element={<DoctorPage />} />
-          </Routes>
-        </AppLayout>
-      </BrowserRouter>
-    </AccessibilityProvider>
+    <AuthProvider>
+      <AccessibilityProvider>
+        <BrowserRouter>
+          <AppLayout>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/get-token" element={<GetTokenPage />} />
+              <Route path="/status" element={<StatusPage />} />
+              <Route path="/display" element={<DisplayPage />} />
+              <Route path="/doctor" element={<DoctorPage />} />
+            </Routes>
+          </AppLayout>
+        </BrowserRouter>
+      </AccessibilityProvider>
+    </AuthProvider>
   );
 };
 
 export default App;
+

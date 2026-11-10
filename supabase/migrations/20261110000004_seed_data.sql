@@ -129,3 +129,4 @@ BEGIN
     ON CONFLICT (queue_date, token_number) DO NOTHING;
 
 END $$;
+

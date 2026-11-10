@@ -42,20 +42,21 @@
   - [x] Verify production compilation (TypeScript + Vite build: 162.76 kB gzipped).
   - [x] Update documentation, commit, and push.
 
-- [ ] **PHASE 2: AUTH AND CORE QUEUE LOGIC (BACKEND)**
-  - [ ] Implement Supabase Auth login flow for Doctor and Helper roles with route guards.
-  - [ ] Implement PostgreSQL RPC functions:
-    - [ ] `create_token` (concurrency-safe atomic token generation)
-    - [ ] `call_next`
-    - [ ] `start_consultation`
-    - [ ] `complete_consultation`
-    - [ ] `mark_missed`
-    - [ ] `hold_turn`
-    - [ ] `reorder_queue`
-    - [ ] `compute_wait_estimate`
-  - [ ] Configure automatic audit log triggers.
-  - [ ] Execute concurrency unit test verifying duplicate token prevention.
-  - [ ] Update documentation, commit, and push.
+- [x] **PHASE 2: AUTH AND CORE QUEUE LOGIC (BACKEND)**
+  - [x] Implement Supabase Auth context (`AuthContext`) for Doctor and Helper roles with route guards.
+  - [x] Implement all atomic PostgreSQL RPC functions (`20261110000006_rpc_functions.sql`):
+    - [x] `create_token` (concurrency-safe atomic token generation via transactional advisory locking)
+    - [x] `call_next` (with Senior Fair Interleaving 3:1 policy)
+    - [x] `start_consultation`
+    - [x] `complete_consultation`
+    - [x] `mark_missed` (5-minute countdown grace period)
+    - [x] `hold_turn`
+    - [x] `reorder_queue`
+    - [x] `compute_wait_estimate` (rolling mean, standard deviation bounds, and doctor delay note)
+  - [x] Configure automatic audit log triggers on tokens and clinic settings (`20261110000007_audit_triggers.sql`).
+  - [x] Author comprehensive RPC and concurrency unit tests (`20261110000008_test_core_rpc.sql`).
+  - [x] Build typed client API wrapper (`src/lib/queue-api.ts`) and wire into Doctor and Patient flows.
+  - [x] Update documentation, commit, and push.
 
 - [ ] **PHASE 3: DOCTOR CONSOLE (QUEUE TAB)**
   - [ ] Build Doctor Console Queue view on live Supabase data.

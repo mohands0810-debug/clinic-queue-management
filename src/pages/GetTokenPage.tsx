@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { createTokenRPC } from '@/lib/queue-api';
 import { AccessibilityNeed } from '@/types/database';
 import { 
   ArrowLeft, 
@@ -65,61 +65,25 @@ export const GetTokenPage: React.FC = () => {
     setErrorMsg(null);
 
     try {
-      // 1. Insert patient record
-      const { data: patientData, error: patientError } = await supabase
-        .from('patients')
-        .insert({
-          full_name: fullName.trim(),
-          phone: noPhone ? null : phone.trim(),
-          age: parsedAge,
-          accessibility_needs: accessibility,
-        })
-        .select()
-        .single();
-
-      if (patientError) throw patientError;
-
-      // 2. Fetch today's current highest token number
-      const today = new Date().toISOString().split('T')[0];
-      const { data: lastToken } = await supabase
-        .from('tokens')
-        .select('token_number')
-        .eq('queue_date', today)
-        .order('token_number', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      const nextTokenNum = (lastToken?.token_number || 0) + 1;
-
-      // 3. Insert token
-      const { data: tokenData, error: tokenError } = await supabase
-        .from('tokens')
-        .insert({
-          token_number: nextTokenNum,
-          queue_date: today,
-          patient_id: patientData.id,
-          status: 'waiting',
-          is_priority: isSenior,
-          source: 'phone',
-          arrived_at_clinic: false,
-        })
-        .select()
-        .single();
-
-      if (tokenError) throw tokenError;
+      // Execute concurrency-safe atomic RPC function
+      const result = await createTokenRPC({
+        fullName: fullName.trim(),
+        phone: noPhone ? null : phone.trim(),
+        age: parsedAge,
+        accessibility,
+        source: 'phone',
+      });
 
       // Store personal session secret in localStorage for tracking
-      localStorage.setItem('dhanvantri_active_token_id', tokenData.id);
-      localStorage.setItem('dhanvantri_session_secret', tokenData.session_secret);
+      localStorage.setItem('dhanvantri_active_token_id', result.token_id);
+      localStorage.setItem('dhanvantri_session_secret', result.session_secret);
 
-      // Navigate to status screen
-      navigate(`/status?id=${tokenData.id}`);
+      // Navigate to live status screen
+      navigate(`/status?id=${result.token_id}`);
     } catch (err: unknown) {
       console.error('Error creating token:', err);
-      // Fallback redirect with error message
-      setErrorMsg(
-        'Could not complete token registration directly. Ensure Supabase credentials are configured.'
-      );
+      const msg = err instanceof Error ? err.message : 'Could not complete token registration.';
+      setErrorMsg(msg);
     } finally {
       setLoading(false);
     }

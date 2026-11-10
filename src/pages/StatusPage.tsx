@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
-import { Token, PublicQueueItem } from '@/types/database';
+import { computeWaitEstimateRPC, WaitEstimateResult } from '@/lib/queue-api';
+import { Token } from '@/types/database';
 import { useAccessibility } from '@/context/AccessibilityContext';
 import { 
   ArrowLeft, 
@@ -25,6 +26,7 @@ export const StatusPage: React.FC = () => {
   const [token, setToken] = useState<Token | null>(null);
   const [patientsAhead, setPatientsAhead] = useState<number>(0);
   const [estimatedWaitMins, setEstimatedWaitMins] = useState<number>(15);
+  const [waitEstimate, setWaitEstimate] = useState<WaitEstimateResult | null>(null);
   const [hasReached, setHasReached] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -48,6 +50,14 @@ export const StatusPage: React.FC = () => {
             const updated = payload.new as Token;
             setToken(updated);
             setHasReached(updated.arrived_at_clinic);
+            // Recompute wait estimate on status update
+            computeWaitEstimateRPC(tokenId)
+              .then((est) => {
+                setWaitEstimate(est);
+                setPatientsAhead(est.patients_ahead);
+                setEstimatedWaitMins(est.estimated_mins);
+              })
+              .catch(console.warn);
           }
         )
         .subscribe();
@@ -73,19 +83,14 @@ export const StatusPage: React.FC = () => {
         setToken(data as Token);
         setHasReached(data.arrived_at_clinic);
 
-        // Fetch how many patients are ahead in public_queue
-        const { data: queueData } = await supabase
-          .from('public_queue')
-          .select('token_number, status');
-
-        if (queueData) {
-          const items = queueData as PublicQueueItem[];
-          const myNum = data.token_number;
-          const ahead = items.filter(
-            (i) => i.status === 'waiting' && i.token_number < myNum
-          ).length;
-          setPatientsAhead(ahead);
-          setEstimatedWaitMins(Math.max(5, (ahead + 1) * 8));
+        // Fetch dynamic wait estimate via RPC
+        try {
+          const est = await computeWaitEstimateRPC(id);
+          setWaitEstimate(est);
+          setPatientsAhead(est.patients_ahead);
+          setEstimatedWaitMins(est.estimated_mins);
+        } catch {
+          setEstimatedWaitMins(15);
         }
       }
     } catch (err) {
@@ -226,14 +231,26 @@ export const StatusPage: React.FC = () => {
                 <p className="text-3xl font-extrabold text-foreground">
                   ~{estimatedWaitMins} mins
                 </p>
+                {waitEstimate && (
+                  <p className="text-xs text-muted-foreground font-medium">
+                    (could be {waitEstimate.range_min}–{waitEstimate.range_max} mins)
+                  </p>
+                )}
               </div>
             </div>
+
+            {/* Delay Transparency Note */}
+            {waitEstimate?.delay_note && (
+              <div className="p-3 bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                <span>⚠️ {waitEstimate.delay_note}</span>
+              </div>
+            )}
 
             {/* Arrival Guidance */}
             <div className="p-3 bg-muted rounded-xl text-foreground font-semibold flex items-center justify-center gap-2">
               <Clock className="w-5 h-5 text-primary" />
               <span>
-                {t('status.suggestedArrival')}: 15 mins before call
+                {t('status.suggestedArrival')}: {waitEstimate?.come_by_time ? new Date(waitEstimate.come_by_time).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '15 mins before call'}
               </span>
             </div>
           </div>

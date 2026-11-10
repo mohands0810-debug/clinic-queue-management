@@ -66,6 +66,21 @@ Open your Supabase Project Dashboard -> **SQL Editor** -> **New query**, and exe
    - Paste into the SQL Editor and click **Run**.
    - *Result*: Seeds Dr Yogesh's clinic configuration, 3 senior patient profiles, 6 general patients, and 12 sample tokens in realistic lifecycle states (`completed`, `in_progress`, `called`, `hold`, `missed`, `waiting`).
 
+5. **Step 5: Atomic Stored Procedures (RPC Functions)**
+   - Open and copy: [`supabase/migrations/20261110000006_rpc_functions.sql`](file:///c:/Users/mohan/OneDrive/Desktop/dhanvantri-clinic/supabase/migrations/20261110000006_rpc_functions.sql)
+   - Paste into the SQL Editor and click **Run**.
+   - *Result*: Installs concurrency-safe `create_token` with transactional advisory locking, `call_next` with Senior Fair Interleaving (3:1), `start_consultation`, `complete_consultation`, `mark_missed` (5-min grace), `hold_turn`, `reorder_queue`, and `compute_wait_estimate`.
+
+6. **Step 6: Automated Audit Triggers**
+   - Open and copy: [`supabase/migrations/20261110000007_audit_triggers.sql`](file:///c:/Users/mohan/OneDrive/Desktop/dhanvantri-clinic/supabase/migrations/20261110000007_audit_triggers.sql)
+   - Paste into the SQL Editor and click **Run**.
+   - *Result*: Automatically records previous and new state changes in `audit_log` whenever tokens or clinic delay settings are modified.
+
+7. **Step 7: Run RPC & Concurrency Stress Tests**
+   - Open and copy: [`supabase/migrations/20261110000008_test_core_rpc.sql`](file:///c:/Users/mohan/OneDrive/Desktop/dhanvantri-clinic/supabase/migrations/20261110000008_test_core_rpc.sql)
+   - Paste into the SQL Editor and click **Run**.
+   - *Result*: Validates atomic numbering, consecutive allocations, grace period triggers, and audit logging.
+
 ---
 
 ## 4. Testing RLS and Database Integrity
@@ -122,3 +137,4 @@ To guarantee sub-500ms instantaneous screen synchronization across patient phone
    - `clinic_settings`
    - `help_requests`
 4. Click **Save**. Instant WebSocket broadcasts are now enabled for the clinic!
+

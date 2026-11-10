@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-10 - Phase 2: Auth and Core Queue Logic Backend
+### Added
+- Complete suite of atomic PostgreSQL stored procedures (`supabase/migrations/20261110000006_rpc_functions.sql`):
+  - `create_token`: Concurrency-safe atomic token generation employing date-hashed transactional advisory locks (`pg_advisory_xact_lock`) ensuring duplicate token numbers are mathematically impossible.
+  - `call_next`: Queue advance function implementing configurable Senior Fair Interleaving (default 3:1 ratio), prioritizing seniors aged 60+ without starving general patients.
+  - `start_consultation`: Atomically moves token to `in_progress` with start timestamp.
+  - `complete_consultation`: Atomically marks consultation `completed` and computes duration.
+  - `mark_missed`: Triggers 5-minute countdown grace period and logs patient absence.
+  - `hold_turn`: Allows doctor to hold a turn for a specified duration when a patient steps out.
+  - `reorder_queue`: Updates sequence overrides across token arrays with clinical audit justification.
+  - `compute_wait_estimate`: Public calculation of dynamic wait times using rolling average of today's completed consultations and standard deviation range bounds.
+- Automated PostgreSQL audit triggers (`supabase/migrations/20261110000007_audit_triggers.sql`) logging every token state transition and clinic settings update.
+- Automated SQL unit tests and concurrency verification (`supabase/migrations/20261110000008_test_core_rpc.sql`) validating sequential numbering, grace period activation, and audit records.
+- Typed client API layer (`src/lib/queue-api.ts`) connecting frontend actions to atomic RPC procedures.
+- Supabase Authentication context (`src/context/AuthContext.tsx`) with role resolution (`doctor` vs `helper`) and settings route guards.
+
 ## [0.2.0] - 2026-11-10 - Phase 1: Project Setup and Database Migrations
 ### Added
 - Application scaffolding with React 18, Vite 6, TypeScript 5.7, Tailwind CSS 3.4, and shadcn/ui foundation.

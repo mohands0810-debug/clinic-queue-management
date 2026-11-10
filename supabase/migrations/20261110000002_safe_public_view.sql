@@ -39,3 +39,4 @@ ORDER BY
 -- Grant SELECT permission to anonymous and authenticated users
 GRANT SELECT ON public_queue TO anon;
 GRANT SELECT ON public_queue TO authenticated;
+

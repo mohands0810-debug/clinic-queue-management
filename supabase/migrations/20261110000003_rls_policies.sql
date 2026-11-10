@@ -163,3 +163,4 @@ CREATE POLICY "Staff can insert audit log entries"
     ON audit_log FOR INSERT
     TO authenticated
     WITH CHECK (is_staff());
+

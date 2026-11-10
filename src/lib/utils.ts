@@ -18,3 +18,4 @@ export function formatTime(timeStr?: string | null): string {
     return timeStr;
   }
 }
+

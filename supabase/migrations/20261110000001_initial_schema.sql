@@ -105,3 +105,4 @@ CREATE INDEX IF NOT EXISTS idx_tokens_created_at ON tokens(created_at);
 CREATE INDEX IF NOT EXISTS idx_tokens_session_secret ON tokens(session_secret);
 CREATE INDEX IF NOT EXISTS idx_help_requests_pending ON help_requests(status) WHERE status = 'pending';
 CREATE INDEX IF NOT EXISTS idx_audit_log_token ON audit_log(token_id);
+
