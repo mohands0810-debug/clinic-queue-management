@@ -94,6 +94,9 @@ export const StatusPage: React.FC = () => {
         } catch {
           setEstimatedWaitMins(15);
         }
+      } else {
+        setToken(null);
+        localStorage.removeItem('dhanvantri_active_token_id');
       }
     } catch (err) {
       console.error('Failed to fetch token status:', err);
