@@ -205,22 +205,46 @@ export const HomePage: React.FC = () => {
 
       {/* Primary Actions */}
       <div className="space-y-4">
-        {/* Get My Token CTA */}
+        {/* 1-Tap Instant Token (Zero Details / Zero Typing) */}
+        <Link
+          to="/instant-token"
+          className="w-full min-h-button-tall bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl px-6 py-5 shadow-xl flex items-center justify-between group transition-all active:scale-[0.99] border-2 border-amber-300 dark:border-amber-400"
+        >
+          <div className="text-left flex items-center gap-3.5">
+            <div className="w-13 h-13 rounded-2xl bg-white/25 flex items-center justify-center shrink-0 shadow-inner p-2.5">
+              <Zap className="w-8 h-8 text-white fill-white animate-pulse" />
+            </div>
+            <div>
+              <div className="text-xl md:text-2xl font-black flex items-center gap-2 tracking-tight">
+                <span>1-Tap Instant Token</span>
+                <span className="text-[11px] uppercase px-2.5 py-0.5 rounded-full bg-white text-orange-700 font-black tracking-wider shadow-sm">
+                  1 Sec
+                </span>
+              </div>
+              <p className="text-amber-100 text-sm md:text-base font-bold mt-0.5">
+                ⚡ No typing, no name, no phone needed • Takes 1 second
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-7 h-7 text-white group-hover:translate-x-1.5 transition-transform shrink-0" />
+        </Link>
+
+        {/* Regular 3-Step Registration with Patient Name & Senior Care */}
         <Link
           to="/get-token"
-          className="w-full min-h-button-tall bg-primary text-primary-foreground hover:bg-primary-700 rounded-2xl px-6 py-5 shadow-lg flex items-center justify-between group transition-all active:scale-[0.99]"
+          className="w-full min-h-touch-target bg-primary text-primary-foreground hover:bg-primary-700 rounded-2xl px-6 py-4 shadow-md flex items-center justify-between group transition-all active:scale-[0.99]"
         >
           <div className="text-left">
-            <div className="text-xl md:text-2xl font-extrabold flex items-center gap-2">
-              {t('home.getMyToken')}
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-1.5 transition-transform" />
+            <div className="text-lg md:text-xl font-bold flex items-center gap-2">
+              <span>{t('home.getMyToken', 'Register with Name & Age')}</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
             </div>
-            <p className="text-primary-100 text-base font-medium mt-1">
-              {t('home.tokenSubtitle')}
+            <p className="text-primary-100 text-xs md:text-sm font-medium mt-0.5">
+              Enter patient details, age (for 60+ Senior Priority), or accessibility needs
             </p>
           </div>
-          <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center font-black text-xl flex-shrink-0">
-            1
+          <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm shrink-0">
+            2
           </div>
         </Link>
 
