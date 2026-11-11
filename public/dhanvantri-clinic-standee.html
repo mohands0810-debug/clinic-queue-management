@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dhanvantri Clinic - Instant Token QR Poster</title>
+  <style>
+    @page { size: A4 portrait; margin: 10mm; }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .poster-card {
+      width: 100%;
+      max-width: 540px;
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(15, 76, 129, 0.12);
+      border: 3px solid #0F4C81;
+      overflow: hidden;
+      text-align: center;
+    }
+    .poster-header {
+      background: linear-gradient(135deg, #0F4C81 0%, #0369a1 100%);
+      color: #ffffff;
+      padding: 32px 24px 24px;
+    }
+    .emblem {
+      width: 64px;
+      height: 64px;
+      background: #ffffff;
+      color: #0F4C81;
+      border-radius: 50%;
+      font-size: 36px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    .subheading {
+      margin: 6px 0 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #e0f2fe;
+    }
+    .address {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #bae6fd;
+    }
+    .badge {
+      display: inline-block;
+      margin: 20px auto 0;
+      background: #fef3c7;
+      color: #92400e;
+      border: 2px solid #f59e0b;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+    }
+    .instructions {
+      padding: 20px 24px 10px;
+    }
+    .instructions h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #0f172a;
+      font-weight: 800;
+    }
+    .instructions p {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: #64748b;
+      font-weight: 500;
+    }
+    .qr-container {
+      background: #f8fafc;
+      margin: 16px 32px;
+      padding: 20px;
+      border-radius: 20px;
+      border: 2px dashed #cbd5e1;
+      display: flex;
+      justify-content: center;
+    }
+    .qr-container img {
+      width: 280px;
+      height: 280px;
+      display: block;
+      border-radius: 12px;
+    }
+    .url-pill {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    .footer-note {
+      padding: 16px 24px 24px;
+      border-top: 1px solid #f1f5f9;
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .senior-pill {
+      color: #b45309;
+      background: #fef3c7;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .print-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0F4C81;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    @media print {
+      body { background: transparent; padding: 0; }
+      .print-btn { display: none; }
+      .poster-card { box-shadow: none; border-width: 2px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="poster-card">
+    <div class="poster-header">
+      <div class="emblem">ಧ</div>
+      <h1>DHANVANTRI CLINIC</h1>
+      <div class="subheading">Dr Yogesh • BTM Layout, Bengaluru</div>
+      <div class="address">Sandhya Theater Complex, VP Road • Ph: +91 98765 43210</div>
+    </div>
+
+    <div class="badge">⚡ SCAN FOR INSTANT TOKEN</div>
+
+    <div class="instructions">
+      <h2>No Typing or App Required</h2>
+      <p>Scan with your phone camera or our website QR scanner to receive your queue token in 1 second.</p>
+    </div>
+
+    <div class="qr-container">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlgAAAJYCAYAAAC+ZpjcAAAAAklEQVR4AewaftIAABcTSURBVO3B0Y0EppYFwGM0AZAYKfFBSiRGBl4nsM9Cutjdnqr648+/BACAMi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUj/5B/SxQr2zZ17qY+XG2TOv9bHy0tkzr/Wx8tLZM5+mj5XXzp55qY+VG2fPfLs+Vm6dPXOjj5WXzp55rY+VG2fP3OhjhXpnz7zUAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFDqJx/o7Jnfpo+V1/pYuXH2zKc5e+ZGHyuv9bFy4+yZl/pY+XZnz9zqY4X/vrNnXutj5cbZM5/m7Jnfpo+VT9ICAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUOon/wF9rHyas2f4e32s3Dh75sbZM6+dPfNSHys3zp651cfKS2fP3Ohj5dbZM5+kj5VbZ8/c6GPlxtkzN86eudXHykt9rNw4e4a/18fKpzl75pu1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCg1E/gP6yPldfOnvltzp556eyZ1/pYeensmVt9rNw4e+alPlZunT3zUh8rn6aPlRtnz/Df1wIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQ6idQpI+V1/pYeensmVt9rLx09sxrZ8/c6GPltzl75kYfK7fOnvl2fazcOHvmxtkzN/pYgX9DCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpn/wHnD3Dv+/smVt9rPC/9bFy4+yZT3P2zKfpY+VGHyuv9bFy4+yZb9fHyo2zZ26cPcPfO3uGWi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApX7ygfpY4fv0sXLr7JkbfazcOHvmRh8rt86eudHHyo2zZ270sXLr7JlP0sfKrbNnXjp75kYfK7fOnrnRx8qNs2deO3vmRh8rL/WxcuvsmRt9rNw4e+a1Plb4d7UAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKDUT/4BZ8/w7zt75kYfK9+uj5UbZ8/c6mPl2/Wx8knOnvl2Z898u7NnPk0fK6/1sXLj7JmXzp7h+7QAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlPrJf0AfK7fOnnmpj5Xf5uyZ186e+TRnz7zUx8q362OFemfPvNTHyq2zZ146e+a1PlZe6mPlxtkzt/pY+W3OnvkkLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClfvIP6GPl0/SxcuPsmRtnz/D3+lj5JGfPfJqzZ270sfLa2TM3+lh57eyZl/pYee3smRt9rNw4e+bG2TO3+ljh33f2zI0+Vm6cPfNp+li5cfbMSy0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApX7yDzh75qU+Vm6dPfNJ+li5dfbMjT5Wbpw989rZMzf6WLlx9sxrfay8dPbMjbNnbvWx8u36WHnp7Jlv18fKjbNnbp0981IfKzfOnvk0Z898mrNnqNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSP/kH9LFy4+yZ1/pYuXH2zEtnz3yaPlZeO3vmxtkzL/Wx8trZMzf6WPk0fazcOHvmRh8rr509c6OPlU9z9sxLfazcOnvmRh8r366PlRtnz3yaPlZeOnvmt2kBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKPWTf8DZMzf6WHnt7JkbfazcOHvmRh8rn+bsmRt9rLzWx8qNs2deO3vmk5w9c6uPlRtnz9zoY+XG2TO3+li50cfKjbNnPk0fKzfOnvl2Z8/c6GPl1tkzL/Wx8trZMy+dPcP/1gIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQ6if/gD5WPk0fKy/1sXLj7Jlbfax8uz5Wbpw9c6OPldf6WLlx9sxLfazcOnvmRh8rv00fKzfOnrnVx8pLfazcOHvmtbNnXjp75lYfKzfOnnnp7Jlbfax8kj5Wbp09881aAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEr95Jc6e+ZGHys3zp650cfKa2fP3Ohj5bWzZ270sfJpzp650cfKjbNnbvSx8mnOnnnt7Jkbfazw7+tj5aWzZ26dPXOjj5UbZ898uz5W+N9aAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQ6o8//5Iv18fKrbNnXupj5cbZM7f6WLlx9syNPlZunD3z7fpY+TRnz9zoY+W1s2du9LHy2tkzL/Wxwt87e+ZGHysvnT1zq4+VT3L2zGt9rLx09sytPlZeOnvmpRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUn/8+Zd8mD5WXjt75pP0sfIbnT1zo4+VG2fPfJo+Vj7N2TPfro+VG2fP3Ohj5cbZM6/1sfLS2TOv9bHy7c6eeamPlVtnz9zoY+XG2TOfpo+VG2fPvNQCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUOonH+jsmRt9rNzqY+WTnD1zq4+VG2fP3Ohj5cbZM7f6WLlx9sxvc/bMa32s3Dh75qU+Vj7N2TO/TR8rr509c6OPlRtnz9zqY+WlPlZunD1zq4+VG2fPUKsFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoNRPPlAfKzfOnvk0fazc6GPltT5WPs3ZMzf6WPl2Z8/c6GPlxtkzn6aPlRtnz7zWx8pLZ8+8dvbMjT5WPk0fK5/m7Jkbfax8mrNnbvSxcuPsGf63FgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlPrjz7/ksT5WPs3ZM9+uj5Xf5uyZG32svHb2zCfpY+XTnD3zafpYuXH2DPX6WLlx9sxrfazcOHvmRh8r3+7smdf6WLlx9swnaQEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo9ceff8mH6WPlxtkzt/pY4d939sxLfax8mrNnvl0fK9Q7e+ZGHys3zp650cfKrbNnbvSxcuPsmRt9rPDvO3vmVh8rN86e+SQtAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKV+8g/oY+WlPlZunT1zo4+VG2fPfJo+Vj5NHyuf5OyZW32svNTHyo2zZz7N2TOfpo+Vl86e+XZnz7x29syNPlZunD1zq4+Vl86e+TR9rHyas2du9LFy4+yZl1oAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASv3kP+DsmW/Xx8qts2deOnvmRh8rr509c6OPldfOnrnRx8qNs2d+mz5Wbp09Q60+Vm6dPfPS2TO/TR8rt86eeensmRt9rNw6e+abtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoNRP/gFnz/C/nT3D3+tj5dP0sfJJ+lj5dmfPfJqzZ270sXLr7JmX+lj5NH2sfJqzZ270sfLS2TOfpo+VG2fP/DYtAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKX++PMveayPlZfOnnmtjxXqnT3zSfpYuXX2zI0+Vl46e+ZWHyv8+86e+SR9rNw6e+ZGHys3zp55rY8Vap0989u0AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJT6yT/g7Jkbfazc6GPl1tkzL50981ofKzfOnrnRx8qn6WPlxtkz3+7smRt9rNw6e+alPlZunD3zafpYuXH2zG/Ux8qNs2du9LFy4+yZ186eeamPldfOnrnRx8prfay8dPbMSy0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApX7yD+hj5cbZM6/1sXLj7Jkbfay8dvbMS2fPvNbHCv9bHys3zp75NGfP3Ohj5dbZMzf6WHmpj5Vvd/bMa32sfJqzZ77d2TM3+li5cfbMjT5Wbp09c6OPlU/SAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUj/5pc6eudHHyo2zZ17rY+WTnD1z6+yZl/pYea2PlRtnz9zoY+VGHyuvnT1zo4+VG2fP3Opj5aWzZ270sXLr7JkbfazcOHvmt+ljhb939syNPlZunD3z27QAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlPrJP+DsmW939sxLfazcOnvmpT5WPk0fK9+uj5WXzp651cfKtzt75qU+Vl7rY+WT9LHyac6eea2PlRtnz7zUx8qnOXvm05w980laAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEr98edf8lgfKzfOnrnRx8qts2de6mPlxtkzr/WxcuPsmRt9rNw6e+aT9LFy6+yZl/pY+TRnz3yaPlZunD3zUh8rt86eudHHyktnz3yaPlZunD3zWh8rL509c6uPlRtnz9zoY+XG2TO3+lh56eyZl1oAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASv3kA/WxcuPsmVt9rNw4e+bG2TM3+li5dfbMJzl75jfqY+XG2TM3zp75NH2s3Dh75kYfK7fOnrnRx8q3O3vm0/Sxwv929syNPlZe62PlpT5Wbp09c6OPlU/SAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUj/hiT5Wbpw9c6uPlRtnz3yaPlZunD1zo4+VG2fP/EZ9rNw4e+bbnT3zUh8rt/pYeensmRt9rHy7PlZeO3vm2509c6OPlRtnz/w2LQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClfvKBzp557eyZl86eudHHyq2zZ36bPlZe6mPl2509c+vsGWqdPfMbnT1zo4+VG2fP3Ohj5bU+Vm6cPUO9s2c+SQsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqZ/8A86eeamPldfOnrnRx8qNs2f4TmfP/DZ9rNw4e+bT9LHyac6eudHHyo2zZ17rY+XG2TM3+li5cfbMa32svHT2zK0+Vn6bPlZunD3zUgsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqT/+/Ev4W32s3Dh75kYfK6+dPXOjj5UbZ898mj5WPs3ZM79NHys3zp651cfKjbNnbvSxcuPsmW/Xx8qts2du9LHy0tkzr/Wx8mnOnrnRx8qnOXvmRh8rN86eeakFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClfvKB+lj5bc6eea2PlZf6WPk0Z8+81sfKt+tj5dudPfPt+li5cfbMS2fPfJqzZ270sfLa2TMv9bHy2tkzN/pYuXH2zK0+Vm6cPfNJWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABK/fHnX/JYHys3zp55rY+Vl86eudHHyq2zZ270sXLj7JkbfazcOnvmpT5Wbpw982n6WOF3OHvmt+ljhe9z9sxrfay8dPbMSy0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApX7yDzh75tOcPfNJzp75jfpYuXH2DP/b2TO3+lh56eyZT9PHyrfrY+Wls2du9bFy4+yZG32s3Dh75rU+Vm6cPfNp+li50cfKa2fP3Ohj5ZO0AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJT6yT+gjxXqnT3z7c6eudHHyrfrY+XG2TM3+li5dfbMjT5WXupj5dbZMy+dPXOjj5Vbfay8dPbMa2fPfLs+Vj5JHyu3zp556eyZG32s/DYtAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo9ZMPdPbMb9PHyqfpY+XG2TOf5uyZ1/pY+SRnz9zqY+WTnD3z7c6eudXHykt9rLx29syNPlZunD3z25w982n6WLlx9sxv0wIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQ6if/AX2sfJqzZz7N2TMv9bHyafpY+XZ9rLx29syNPlZu9LHC3zt75pP0sfJp+lj5dn2sfLuzZz7N2TOfpAUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCg1E/g/9HHyo2zZ17rY+Wls2de62PlxtkzN/pYoV4fK6+dPfNSHys3zp651cfKJzl75lYfKy+dPfNp+li50cfKtzt75qUWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFI/4dfoY+XG2TOf5uyZG32svNbHyo2zZz5NHysvnT3zafpYeensmdf6WLlx9sy3O3vmtbNnbvSx8tucPXOjj5XfpgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKV+8h9w9gx/7+yZb9fHyo2zZ270sXLr7JkbfazcOHvmtbNnbvSxcqOPlU9z9sxLfazcOnvm2509c6OPlZf6WHnt7Jnfpo+VG2fP/DYtAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKV+8oH6WOHf18fKa2fP3Dh75tudPfPbnD3zWh8r366PlU/Sx8qts2c+ydkzr/WxcuPsmdf6WPlt+li5cfbMSy0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlGoBAKBUCwAApf748y8BAKBMCwAApVoAACjVAgBAqRYAAEq1AABQqgUAgFItAACUagEAoFQLAAClWgAAKNUCAECpFgAASrUAAFCqBQCAUi0AAJRqAQCgVAsAAKVaAAAo1QIAQKkWAABKtQAAUKoFAIBSLQAAlPo/LGCY6g9420MAAAAASUVORK5CYII=" alt="Scan for instant queue token" />
+    </div>
+
+    <div>
+      <span class="url-pill">clinic-queue-management-theta.vercel.app</span>
+    </div>
+
+    <div class="footer-note">
+      <div class="senior-pill">🌟 Senior Citizens (60+) receive priority interleaving</div>
+      <div>Department of Computer Science & Engineering, KSIT Community Project 25BCP308</div>
+    </div>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print Poster / Save as PDF</button>
+</body>
+</html>

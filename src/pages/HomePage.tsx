@@ -15,7 +15,10 @@ import {
   HeartHandshake,
   CheckCircle2,
   AlertTriangle,
+  QrCode,
+  Camera,
 } from 'lucide-react';
+import { QrScannerModal } from '@/components/common/QrScannerModal';
 
 export const HomePage: React.FC = () => {
   const { t } = useTranslation();
@@ -25,6 +28,7 @@ export const HomePage: React.FC = () => {
   const [currentServing, setCurrentServing] = useState<PublicQueueItem | null>(null);
   const [waitingCount, setWaitingCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showScanner, setShowScanner] = useState<boolean>(false);
 
   useEffect(() => {
     fetchInitialData();
@@ -219,6 +223,29 @@ export const HomePage: React.FC = () => {
           </div>
         </Link>
 
+        {/* Scan Clinic QR Button (Fast Instant Token) */}
+        <button
+          type="button"
+          onClick={() => setShowScanner(true)}
+          className="w-full min-h-touch-target bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl px-6 py-4 shadow-md flex items-center justify-between group transition-all active:scale-[0.99]"
+        >
+          <div className="text-left flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+              <Camera className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <div className="text-lg md:text-xl font-black flex items-center gap-2">
+                Scan Clinic QR Code
+                <QrCode className="w-5 h-5 text-emerald-200" />
+              </div>
+              <p className="text-emerald-100 text-xs md:text-sm font-semibold mt-0.5">
+                Scan desk QR standee to get an instant token without typing
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-5 h-5 text-white/80 group-hover:translate-x-1.5 transition-transform shrink-0" />
+        </button>
+
         {/* Check My Token CTA */}
         <Link
           to="/status"
@@ -265,6 +292,12 @@ export const HomePage: React.FC = () => {
           <span>{t('nav.doctorLogin')}</span>
         </Link>
       </div>
+
+      {/* In-Website Camera QR Scanner Modal */}
+      <QrScannerModal
+        isOpen={showScanner}
+        onClose={() => setShowScanner(false)}
+      />
     </div>
   );
 };

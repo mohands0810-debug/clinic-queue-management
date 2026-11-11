@@ -8,6 +8,7 @@ import { GetTokenPage } from '@/pages/GetTokenPage';
 import { StatusPage } from '@/pages/StatusPage';
 import { DisplayPage } from '@/pages/DisplayPage';
 import { DoctorPage } from '@/pages/DoctorPage';
+import { InstantTokenPage } from '@/pages/InstantTokenPage';
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -29,6 +30,7 @@ export const App: React.FC = () => {
           <AppLayout>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/instant-token" element={<InstantTokenPage />} />
               <Route path="/get-token" element={<GetTokenPage />} />
               <Route path="/status" element={<StatusPage />} />
               <Route path="/display" element={<DisplayPage />} />

@@ -2,8 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/supabase';
 import { PublicQueueItem, ClinicSettings } from '@/types/database';
-import { QRCodeSVG } from 'qrcode.react';
-import { AlertTriangle, Wifi } from 'lucide-react';
+import { AlertTriangle, Wifi, Info } from 'lucide-react';
 
 export const DisplayPage: React.FC = () => {
   const { t } = useTranslation();
@@ -337,27 +336,20 @@ export const DisplayPage: React.FC = () => {
             )}
           </div>
 
-          {/* QR Code Panel */}
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex items-center gap-6 shrink-0">
-            <div className="p-3 bg-white rounded-2xl shrink-0">
-              <QRCodeSVG
-                value={`${appUrl}/get-token`}
-                size={130}
-                level="M"
-              />
+          {/* Clinic Guidance Panel */}
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex items-center gap-5 shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-primary/20 border border-primary/40 flex items-center justify-center text-primary-400 font-bold shrink-0">
+              <Info className="w-7 h-7" />
             </div>
             <div>
-              <p className="text-2xl font-black text-white">
-                📱 SCAN TO JOIN QUEUE
+              <p className="text-xl font-black text-white">
+                Queue Instructions & Senior Care
               </p>
-              <p className="text-base text-slate-400 mt-1">
-                No app needed • Takes 30 seconds
+              <p className="text-sm text-slate-300 mt-1">
+                Patients are called in sequential order. Senior Citizens (60+) receive automatic priority care.
               </p>
-              <p className="text-sm text-slate-500 mt-2">
-                Or visit:{' '}
-                <span className="font-mono text-slate-300">
-                  {appUrl}/get-token
-                </span>
+              <p className="text-xs text-slate-400 mt-1.5 font-medium">
+                Please remain seated in the waiting lobby until your token number is announced.
               </p>
             </div>
           </div>
