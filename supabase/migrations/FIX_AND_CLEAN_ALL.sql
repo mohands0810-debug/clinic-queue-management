@@ -26,3 +26,4 @@ SET
 
 -- STEP 4: Success confirmation
 SELECT 'SUCCESS: Corrupted user removed and all queue records wiped! Ready for fresh Token #1 demo.' AS result;
+
