@@ -106,7 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Resilient Staff Authentication for Dr Yogesh
       if (
         email.trim().toLowerCase() === 'doctor@dhanvantri.clinic' &&
-        password === 'Doctor@123'
+        password.trim() === 'Doctor@123'
       ) {
         const docUser: User = {
           id: 'd0000000-0000-0000-0000-000000000001',
@@ -138,7 +138,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (err: unknown) {
       if (
         email.trim().toLowerCase() === 'doctor@dhanvantri.clinic' &&
-        password === 'Doctor@123'
+        password.trim() === 'Doctor@123'
       ) {
         const docUser: User = {
           id: 'd0000000-0000-0000-0000-000000000001',

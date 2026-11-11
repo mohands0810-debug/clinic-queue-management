@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { ClinicSettings } from '@/types/database';
-import { CheckCircle, AlertCircle, Lock } from 'lucide-react';
+import { CheckCircle, AlertCircle, Lock, Trash2, RefreshCw } from 'lucide-react';
 
 interface SettingsTabProps {
   settings: ClinicSettings | null;
@@ -59,6 +59,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [resetting, setResetting] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     if (settings) setForm(settingsToForm(settings));
@@ -99,6 +101,29 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
       setSaveSuccess(true);
       onSaved();
       setTimeout(() => setSaveSuccess(false), 3000);
+    }
+  };
+
+  const handleResetDemoData = async () => {
+    const confirmed = window.confirm(
+      '⚠️ RESET QUEUE FOR FRESH DEMO?\n\nThis will wipe all active tokens, patients, and waiting lines so your next token starts fresh from #1.\n\nAre you sure you want to proceed?'
+    );
+    if (!confirmed) return;
+
+    setResetting(true);
+    setError(null);
+    setResetSuccess(null);
+
+    try {
+      const { data, error: rpcErr } = await supabase.rpc('reset_demo_data');
+      if (rpcErr) throw rpcErr;
+      setResetSuccess(typeof data === 'string' ? data : 'Queue wiped cleanly! Ready for Token #1.');
+      onSaved();
+      setTimeout(() => setResetSuccess(null), 5000);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to reset queue data');
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -286,6 +311,40 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           >
             {saving ? 'Saving…' : 'Save Settings'}
           </button>
+
+          {/* Reset Demo Data Card */}
+          <div className="border border-destructive/30 rounded-2xl p-5 bg-destructive/5 space-y-3 mt-8">
+            <div className="flex items-center gap-2 text-destructive font-black text-base">
+              <Trash2 className="w-5 h-5 flex-shrink-0" />
+              <span>Danger Zone • Fresh Demo Wipe</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Use this before presenting your demo or viva. It clears all registered patients, active queue lines, and consultation records so that your very next registration starts from <strong>Token #1</strong>.
+            </p>
+            {resetSuccess && (
+              <div className="p-3 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200 text-xs font-bold rounded-xl flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{resetSuccess}</span>
+              </div>
+            )}
+            <button
+              onClick={handleResetDemoData}
+              disabled={resetting}
+              className="w-full h-11 border-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2"
+            >
+              {resetting ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Wiping Queue Records...</span>
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4" />
+                  <span>Wipe All Records (Start Fresh from Token #1)</span>
+                </>
+              )}
+            </button>
+          </div>
         </>
       )}
     </div>
