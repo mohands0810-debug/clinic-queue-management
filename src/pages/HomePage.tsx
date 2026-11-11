@@ -100,7 +100,7 @@ export const HomePage: React.FC = () => {
     doctorStatus === 'break' || doctorStatus === 'emergency' || doctorStatus === 'off_duty';
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
+    <div className="max-w-2xl mx-auto px-4 py-6 space-y-5 animate-fade-in">
 
       {/* Doctor Status Banner */}
       {isDisturbedStatus ? (
@@ -149,7 +149,7 @@ export const HomePage: React.FC = () => {
       )}
 
       {/* Now Serving Hero */}
-      <div className="rounded-2xl border-2 border-primary/20 bg-gradient-to-b from-primary/5 to-transparent p-6 text-center shadow-md">
+      <div className="rounded-2xl border-2 border-primary/20 bg-gradient-to-b from-primary/5 to-transparent p-6 text-center shadow-md animate-fade-in-up animate-delay-75 interactive-card">
         <div className="flex items-center justify-center gap-2 text-primary font-bold uppercase tracking-wider text-sm md:text-base mb-3">
           <HeartHandshake className="w-6 h-6" />
           <span>{t('home.nowServing')}</span>
@@ -208,7 +208,7 @@ export const HomePage: React.FC = () => {
         {/* 1-Tap Instant Token (Zero Details / Zero Typing) */}
         <Link
           to="/instant-token"
-          className="w-full min-h-button-tall bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl px-6 py-5 shadow-xl flex items-center justify-between group transition-all active:scale-[0.99] border-2 border-amber-300 dark:border-amber-400"
+          className="w-full min-h-button-tall bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl px-6 py-5 shadow-xl flex items-center justify-between group transition-all duration-200 active:scale-[0.98] border-2 border-amber-300 dark:border-amber-400 interactive-card animate-fade-in-up animate-delay-150"
         >
           <div className="text-left flex items-center gap-3.5">
             <div className="w-13 h-13 rounded-2xl bg-white/25 flex items-center justify-center shrink-0 shadow-inner p-2.5">
@@ -232,7 +232,7 @@ export const HomePage: React.FC = () => {
         {/* Regular 3-Step Registration with Patient Name & Senior Care */}
         <Link
           to="/get-token"
-          className="w-full min-h-touch-target bg-primary text-primary-foreground hover:bg-primary-700 rounded-2xl px-6 py-4 shadow-md flex items-center justify-between group transition-all active:scale-[0.99]"
+          className="w-full min-h-touch-target bg-primary text-primary-foreground hover:bg-primary-700 rounded-2xl px-6 py-4 shadow-md flex items-center justify-between group transition-all duration-200 active:scale-[0.98] interactive-card animate-fade-in-up animate-delay-200"
         >
           <div className="text-left">
             <div className="text-lg md:text-xl font-bold flex items-center gap-2">
@@ -252,7 +252,7 @@ export const HomePage: React.FC = () => {
         <button
           type="button"
           onClick={() => setShowScanner(true)}
-          className="w-full min-h-touch-target bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl px-6 py-4 shadow-md flex items-center justify-between group transition-all active:scale-[0.99]"
+          className="w-full min-h-touch-target bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl px-6 py-4 shadow-md flex items-center justify-between group transition-all duration-200 active:scale-[0.98] interactive-card animate-fade-in-up animate-delay-300"
         >
           <div className="text-left flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
@@ -274,7 +274,7 @@ export const HomePage: React.FC = () => {
         {/* Check My Token CTA */}
         <Link
           to="/status"
-          className="w-full min-h-touch-target bg-card hover:bg-muted border-2 border-border text-foreground rounded-2xl px-6 py-4 shadow-sm flex items-center justify-between group transition-all"
+          className="w-full min-h-touch-target bg-card hover:bg-muted border-2 border-border text-foreground rounded-2xl px-6 py-4 shadow-sm flex items-center justify-between group transition-all duration-200 active:scale-[0.98] interactive-card animate-fade-in-up animate-delay-400"
         >
           <div className="text-left">
             <div className="text-lg md:text-xl font-bold flex items-center gap-2">
@@ -301,7 +301,7 @@ export const HomePage: React.FC = () => {
       </div>
 
       {/* Utility Navigation Footer */}
-      <div className="pt-4 border-t flex flex-wrap items-center justify-between gap-4 text-sm font-semibold text-muted-foreground">
+      <div className="pt-4 border-t flex flex-wrap items-center justify-between gap-4 text-sm font-semibold text-muted-foreground animate-fade-in-up animate-delay-500">
         <Link to="/display" className="flex items-center gap-1.5 hover:text-foreground">
           <Tv className="w-4 h-4 text-primary" />
           <span>{t('nav.tvDisplay')}</span>

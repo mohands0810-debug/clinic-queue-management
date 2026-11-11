@@ -28,17 +28,17 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background text-foreground shadow-sm px-4 py-3 mb-4">
+    <header className="sticky top-0 z-40 w-full border-b bg-background text-foreground shadow-sm px-4 py-3 mb-4 animate-fade-in-down transition-colors duration-200">
       <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
         {/* Clinic Identity */}
         <Link to="/" className="flex items-center gap-2 group">
           <img
             src="/clinic-icon.svg"
             alt="Dhanvantri Clinic Logo"
-            className="w-10 h-10 rounded-full shadow-sm object-contain transition-transform group-hover:scale-105"
+            className="w-10 h-10 rounded-full shadow-sm object-contain transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
           />
           <div>
-            <h1 className="text-xl md:text-2xl font-bold leading-tight tracking-tight">
+            <h1 className="text-xl md:text-2xl font-bold leading-tight tracking-tight group-hover:text-primary transition-colors">
               {t('clinic.name')}
             </h1>
             <p className="text-sm font-medium text-muted-foreground">
@@ -101,17 +101,17 @@ export const Header: React.FC = () => {
           <button
             onClick={toggleDarkMode}
             aria-label={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            className="px-3 py-1.5 rounded-md border font-semibold flex items-center gap-1.5 transition-colors bg-muted text-foreground hover:bg-background"
+            className="px-3 py-1.5 rounded-md border font-semibold flex items-center gap-1.5 transition-all duration-200 bg-muted text-foreground hover:bg-background hover:shadow-sm active:scale-95 group"
             title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {isDarkMode ? (
               <>
-                <Sun className="w-5 h-5 text-amber-400" />
+                <Sun className="w-5 h-5 text-amber-400 transition-transform duration-300 group-hover:rotate-45" />
                 <span className="hidden sm:inline text-sm font-bold">Light</span>
               </>
             ) : (
               <>
-                <Moon className="w-5 h-5 text-slate-700" />
+                <Moon className="w-5 h-5 text-slate-700 dark:text-slate-300 transition-transform duration-300 group-hover:-rotate-12" />
                 <span className="hidden sm:inline text-sm font-bold">Dark</span>
               </>
             )}

@@ -179,14 +179,14 @@ export const QrScannerModal: React.FC<QrScannerModalProps> = ({ isOpen, onClose 
 
   return createPortal(
     <div
-      className="fixed inset-0 bg-black/80 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 animate-fade-in transition-opacity duration-200"
       style={{ zIndex: 99999 }}
       onClick={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
     >
       <div
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full shadow-2xl overflow-hidden relative"
+        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full shadow-2xl overflow-hidden relative animate-scale-in transition-all duration-300"
         style={{ zIndex: 100000 }}
       >
         {/* Header */}

@@ -27,9 +27,9 @@ export const DailySummaryCards: React.FC<DailySummaryCardsProps> = ({ tokens, de
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 animate-fade-in-up">
       {/* Total Issued */}
-      <div className="bg-card border rounded-2xl p-4 shadow-sm">
+      <div className="bg-card border rounded-2xl p-4 shadow-sm interactive-card">
         <div className="flex items-center justify-between text-muted-foreground mb-1">
           <span className="text-xs font-bold uppercase tracking-wider">Total Tokens</span>
           <Users className="w-4 h-4 text-primary" />
@@ -39,7 +39,7 @@ export const DailySummaryCards: React.FC<DailySummaryCardsProps> = ({ tokens, de
       </div>
 
       {/* Waiting */}
-      <div className="bg-card border rounded-2xl p-4 shadow-sm">
+      <div className="bg-card border rounded-2xl p-4 shadow-sm interactive-card">
         <div className="flex items-center justify-between text-muted-foreground mb-1">
           <span className="text-xs font-bold uppercase tracking-wider">In Line</span>
           <Clock className="w-4 h-4 text-amber-500" />
@@ -49,7 +49,7 @@ export const DailySummaryCards: React.FC<DailySummaryCardsProps> = ({ tokens, de
       </div>
 
       {/* Completed */}
-      <div className="bg-card border rounded-2xl p-4 shadow-sm">
+      <div className="bg-card border rounded-2xl p-4 shadow-sm interactive-card">
         <div className="flex items-center justify-between text-muted-foreground mb-1">
           <span className="text-xs font-bold uppercase tracking-wider">Completed</span>
           <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -59,7 +59,7 @@ export const DailySummaryCards: React.FC<DailySummaryCardsProps> = ({ tokens, de
       </div>
 
       {/* Seniors */}
-      <div className="bg-card border rounded-2xl p-4 shadow-sm">
+      <div className="bg-card border rounded-2xl p-4 shadow-sm interactive-card">
         <div className="flex items-center justify-between text-muted-foreground mb-1">
           <span className="text-xs font-bold uppercase tracking-wider">Senior Care</span>
           <Sparkles className="w-4 h-4 text-amber-600" />
@@ -69,7 +69,7 @@ export const DailySummaryCards: React.FC<DailySummaryCardsProps> = ({ tokens, de
       </div>
 
       {/* Avg Duration */}
-      <div className="bg-card border rounded-2xl p-4 shadow-sm col-span-2 md:col-span-1">
+      <div className="bg-card border rounded-2xl p-4 shadow-sm col-span-2 md:col-span-1 interactive-card">
         <div className="flex items-center justify-between text-muted-foreground mb-1">
           <span className="text-xs font-bold uppercase tracking-wider">Avg Pace</span>
           <Clock className="w-4 h-4 text-primary" />

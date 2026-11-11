@@ -330,7 +330,7 @@ export const StatusPage: React.FC = () => {
             <button
               onClick={handleMarkReached}
               disabled={hasReached}
-              className={`w-full h-16 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 shadow-md transition-colors ${
+              className={`w-full h-16 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 shadow-md transition-all duration-200 active:scale-95 interactive-card ${
                 hasReached
                   ? 'bg-emerald-100 text-emerald-800 border-2 border-emerald-500 cursor-default'
                   : 'bg-emerald-600 hover:bg-emerald-700 text-white'
