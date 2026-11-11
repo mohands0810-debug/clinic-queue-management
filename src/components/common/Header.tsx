@@ -32,9 +32,11 @@ export const Header: React.FC = () => {
       <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
         {/* Clinic Identity */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl">
-            ಧ
-          </div>
+          <img
+            src="/clinic-icon.svg"
+            alt="Dhanvantri Clinic Logo"
+            className="w-10 h-10 rounded-full shadow-sm object-contain transition-transform group-hover:scale-105"
+          />
           <div>
             <h1 className="text-xl md:text-2xl font-bold leading-tight tracking-tight">
               {t('clinic.name')}

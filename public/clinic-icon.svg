@@ -1,5 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#0F4C81" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M12 2v20M2 12h20"/>
-  <circle cx="12" cy="12" r="10" stroke="#0F4C81" stroke-width="1.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="clinicGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#145A96" />
+      <stop offset="100%" stop-color="#0F4C81" />
+    </linearGradient>
+  </defs>
+  <!-- Circular Badge -->
+  <circle cx="64" cy="64" r="60" fill="url(#clinicGrad)" stroke="#09355B" stroke-width="1.5" />
+  <!-- Dhanvantri Kannada Emblem 'ಧ' -->
+  <text 
+    x="64" 
+    y="71" 
+    text-anchor="middle" 
+    dominant-baseline="central" 
+    fill="#FFFFFF" 
+    font-family="'Nirmala UI', 'Tunga', 'Kedage', 'Noto Sans Kannada', 'Segoe UI', system-ui, sans-serif" 
+    font-size="66" 
+    font-weight="900"
+    letter-spacing="-1px"
+  >ಧ</text>
 </svg>
-

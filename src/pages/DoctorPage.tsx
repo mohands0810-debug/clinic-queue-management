@@ -290,8 +290,15 @@ export const DoctorPage: React.FC = () => {
     return (
       <div className="max-w-md mx-auto px-4 py-12 space-y-6">
         <div className="bg-card border rounded-3xl p-8 shadow-xl space-y-6 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto shadow-sm">
-            <Lock className="w-8 h-8 text-primary" />
+          <div className="relative w-16 h-16 mx-auto">
+            <img
+              src="/clinic-icon.svg"
+              alt="Dhanvantri Clinic Logo"
+              className="w-16 h-16 rounded-full shadow-md object-contain"
+            />
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center border-2 border-background shadow">
+              <Lock className="w-3.5 h-3.5" />
+            </div>
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
@@ -376,18 +383,25 @@ export const DoctorPage: React.FC = () => {
 
       {/* Top Console Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
-              {settings?.clinic_name || 'Dhanvantri Clinic'}
-            </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
-              Doctor Console
-            </span>
+        <div className="flex items-center gap-3">
+          <img
+            src="/clinic-icon.svg"
+            alt="Dhanvantri Clinic Logo"
+            className="w-12 h-12 rounded-full shadow-sm object-contain"
+          />
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+                {settings?.clinic_name || 'Dhanvantri Clinic'}
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                Doctor Console
+              </span>
+            </div>
+            <p className="text-sm font-semibold text-muted-foreground mt-0.5">
+              {settings?.doctor_name || 'Dr Yogesh'} • Sandhya Theater Complex, BTM Layout
+            </p>
           </div>
-          <p className="text-sm font-semibold text-muted-foreground mt-0.5">
-            {settings?.doctor_name || 'Dr Yogesh'} • Sandhya Theater Complex, BTM Layout
-          </p>
         </div>
 
         {/* Tab Controls */}

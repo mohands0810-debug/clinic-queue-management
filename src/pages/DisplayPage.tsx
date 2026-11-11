@@ -198,15 +198,22 @@ export const DisplayPage: React.FC = () => {
 
       {/* ══ ZONE 1 — Top Bar (10%) ══════════════════════════════════════════════ */}
       <div className="flex items-center justify-between px-8 py-4 border-b border-slate-800 shrink-0">
-        {/* Clinic name + Doctor */}
-        <div className="flex-1 min-w-0">
-          <h1 className="text-3xl md:text-5xl font-black text-white truncate">
-            {settings?.clinic_name ?? 'DHANVANTRI CLINIC'}
-          </h1>
-          <p className="text-xl text-slate-400 mt-0.5 truncate">
-            {settings?.doctor_name ?? 'Dr Yogesh'}{' '}
-            {settings?.address ? `• ${settings.address}` : '• Sandhya Theater Complex, BTM Layout'}
-          </p>
+        {/* Clinic Logo + Name + Doctor */}
+        <div className="flex-1 min-w-0 flex items-center gap-4">
+          <img
+            src="/clinic-icon.svg"
+            alt="Dhanvantri Clinic Logo"
+            className="w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg object-contain shrink-0 border border-slate-700"
+          />
+          <div className="min-w-0">
+            <h1 className="text-3xl md:text-5xl font-black text-white truncate">
+              {settings?.clinic_name ?? 'DHANVANTRI CLINIC'}
+            </h1>
+            <p className="text-xl text-slate-400 mt-0.5 truncate">
+              {settings?.doctor_name ?? 'Dr Yogesh'}{' '}
+              {settings?.address ? `• ${settings.address}` : '• Sandhya Theater Complex, BTM Layout'}
+            </p>
+          </div>
         </div>
 
         {/* Live Clock */}
