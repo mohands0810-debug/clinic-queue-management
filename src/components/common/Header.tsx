@@ -158,6 +158,12 @@ export const Header: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Global In-Header Camera QR Scanner */}
+      <QrScannerModal
+        isOpen={showScanner}
+        onClose={() => setShowScanner(false)}
+      />
     </header>
   );
 };
