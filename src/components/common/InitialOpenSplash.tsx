@@ -66,3 +66,4 @@ export const InitialOpenSplash: React.FC = () => {
     </div>
   );
 };
+
