@@ -27,7 +27,11 @@
     "readToMe": "Read this to me",
     "reconnecting": "Reconnecting...",
     "offlineNotice": "Offline - Showing last known status",
-    "seniorCare": "Senior Care"
+    "seniorCare": "Senior Care",
+    "scanQr": "Scan QR",
+    "lightMode": "Light",
+    "darkMode": "Dark",
+    "realtimeSync": "Realtime Sync Active"
   },
   "home": {
     "nowServing": "NOW SERVING",
@@ -44,7 +48,14 @@
     "patientsInLine": "patients waiting",
     "servingSpoken": "Now serving token number {{num}}.",
     "noActiveSpoken": "Currently no consultations in progress. Ready for next patient.",
-    "waitingSpoken": "{{count}} patients waiting in line."
+    "waitingSpoken": "{{count}} patients waiting in line.",
+    "instantTokenTitle": "1-Tap Instant Token",
+    "oneSecBadge": "1 Sec",
+    "instantTokenSubtitle": "⚡ No typing, no name, no phone needed • Takes 1 second",
+    "registerFullTitle": "Register with Name & Age",
+    "registerFullSubtitle": "Enter patient details, age (for 60+ Senior Priority), or accessibility needs",
+    "scanQrTitle": "Scan Clinic QR Code",
+    "scanQrSubtitle": "Scan desk QR standee to get an instant token without typing"
   },
   "tokenFlow": {
     "title": "Get Your Queue Token",
@@ -84,7 +95,24 @@
     "stateMissed": "Turn Missed - 5 Min Grace Period Active",
     "stateCompleted": "Consultation Completed",
     "stateCancelled": "Token Cancelled",
-    "statusSpoken": "Your token number is {{num}}. Current status: {{status}}. There are {{ahead}} patients ahead of you. Estimated wait is about {{wait}} minutes."
+    "statusSpoken": "Your token number is {{num}}. Current status: {{status}}. There are {{ahead}} patients ahead of you. Estimated wait is about {{wait}} minutes.",
+    "checkSubtitle": "Check live status, wait estimate, or arrival time"
+  },
+  "instantToken": {
+    "issuingTitle": "Issuing Your Token...",
+    "instantActive": "⚡ Instant QR check-in active. No typing or personal details required.",
+    "successGenerated": "Successfully Generated",
+    "redirecting": "Redirecting to your live tracker...",
+    "spokenAnnounce": "Your queue token number is {{num}}. Please wait for your turn.",
+    "failedMsg": "Could not generate instant token. Please try again or ask reception."
+  },
+  "scanner": {
+    "modalTitle": "Scan Clinic QR Code",
+    "modalSubtitle": "Point camera at reception QR code",
+    "startingCamera": "Starting camera...",
+    "switchCamera": "Flip Camera",
+    "noCamera": "No camera device detected on your device.",
+    "cameraError": "Could not access camera. Please check camera permissions."
   },
   "display": {
     "nowServing": "NOW SERVING",
@@ -111,4 +139,3 @@
     "helpBanner": "Patient Distress Alerts"
   }
 }
-

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { Html5Qrcode } from 'html5-qrcode';
@@ -10,6 +11,7 @@ interface QrScannerModalProps {
 }
 
 export const QrScannerModal: React.FC<QrScannerModalProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -62,11 +64,11 @@ export const QrScannerModal: React.FC<QrScannerModalProps> = ({ isOpen, onClose 
 
           if (isMounted) setIsScanning(true);
         } else {
-          setErrorMsg('No camera device detected on your device.');
+          setErrorMsg(t('scanner.noCamera'));
         }
       } catch (err: unknown) {
         console.error('Camera QR start error:', err);
-        const msg = err instanceof Error ? err.message : 'Could not access camera. Please check camera permissions.';
+        const msg = err instanceof Error ? err.message : t('scanner.cameraError');
         if (isMounted) setErrorMsg(msg);
       }
     };
@@ -197,10 +199,10 @@ export const QrScannerModal: React.FC<QrScannerModalProps> = ({ isOpen, onClose 
             </div>
             <div>
               <h3 className="font-extrabold text-base text-foreground">
-                Scan Clinic QR Code
+                {t('scanner.modalTitle')}
               </h3>
               <p className="text-xs text-muted-foreground font-medium">
-                Point camera at reception QR code
+                {t('scanner.modalSubtitle')}
               </p>
             </div>
           </div>
@@ -222,7 +224,7 @@ export const QrScannerModal: React.FC<QrScannerModalProps> = ({ isOpen, onClose 
             {!isScanning && !errorMsg && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/75 text-white gap-2 p-4 text-center">
                 <RefreshCw className="w-8 h-8 animate-spin text-primary-400" />
-                <span className="text-sm font-semibold">Starting camera...</span>
+                <span className="text-sm font-semibold">{t('scanner.startingCamera')}</span>
               </div>
             )}
 

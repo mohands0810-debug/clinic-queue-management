@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import { createTokenRPC } from '@/lib/queue-api';
 import { useAccessibility } from '@/context/AccessibilityContext';
@@ -6,6 +7,7 @@ import { Sparkles, CheckCircle2, AlertCircle, ArrowLeft, RefreshCw } from 'lucid
 
 export const InstantTokenPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { speakText } = useAccessibility();
   const [loading, setLoading] = useState<boolean>(true);
   const [tokenResult, setTokenResult] = useState<{ tokenNumber: number; tokenId: string } | null>(null);
@@ -43,7 +45,7 @@ export const InstantTokenPage: React.FC = () => {
       });
 
       // Announce token number
-      speakText(`Your queue token number is ${result.token_number}. Please wait for your turn.`);
+      speakText(t('instantToken.spokenAnnounce', { num: result.token_number }));
 
       // Smoothly redirect to the live status screen after brief celebration
       setTimeout(() => {
@@ -51,7 +53,7 @@ export const InstantTokenPage: React.FC = () => {
       }, 1500);
     } catch (err: unknown) {
       console.error('Instant token creation failed:', err);
-      const msg = err instanceof Error ? err.message : 'Could not generate instant token. Please try again or ask reception.';
+      const msg = err instanceof Error ? err.message : t('instantToken.failedMsg');
       setErrorMsg(msg);
       setLoading(false);
     }
@@ -69,7 +71,7 @@ export const InstantTokenPage: React.FC = () => {
 
             <div>
               <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
-                Issuing Your Token...
+                {t('instantToken.issuingTitle')}
               </h2>
               <p className="text-sm font-semibold text-muted-foreground mt-2">
                 Dhanvantri Clinic • Dr Yogesh
@@ -77,7 +79,7 @@ export const InstantTokenPage: React.FC = () => {
             </div>
 
             <p className="text-xs text-muted-foreground bg-muted p-3.5 rounded-2xl">
-              ⚡ Instant QR check-in active. No typing or personal details required.
+              {t('instantToken.instantActive')}
             </p>
           </div>
         )}
@@ -90,13 +92,13 @@ export const InstantTokenPage: React.FC = () => {
 
             <div>
               <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Successfully Generated
+                {t('instantToken.successGenerated')}
               </span>
               <div className="text-7xl font-black text-primary tracking-tight my-2">
                 #{tokenResult.tokenNumber}
               </div>
               <p className="text-sm font-bold text-foreground">
-                Redirecting to your live tracker...
+                {t('instantToken.redirecting')}
               </p>
             </div>
           </div>

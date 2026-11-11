@@ -107,12 +107,12 @@ export const Header: React.FC = () => {
             {isDarkMode ? (
               <>
                 <Sun className="w-5 h-5 text-amber-400 transition-transform duration-300 group-hover:rotate-45" />
-                <span className="hidden sm:inline text-sm font-bold">Light</span>
+                <span className="hidden sm:inline text-sm font-bold">{t('common.lightMode')}</span>
               </>
             ) : (
               <>
                 <Moon className="w-5 h-5 text-slate-700 dark:text-slate-300 transition-transform duration-300 group-hover:-rotate-12" />
-                <span className="hidden sm:inline text-sm font-bold">Dark</span>
+                <span className="hidden sm:inline text-sm font-bold">{t('common.darkMode')}</span>
               </>
             )}
           </button>
@@ -137,7 +137,7 @@ export const Header: React.FC = () => {
             title="Scan Clinic QR Code"
           >
             <Camera className="w-5 h-5 text-primary" />
-            <span className="hidden lg:inline text-sm font-bold">Scan QR</span>
+            <span className="hidden lg:inline text-sm font-bold">{t('common.scanQr')}</span>
           </button>
 
           {/* Call Clinic Direct */}

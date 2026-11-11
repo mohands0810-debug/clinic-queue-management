@@ -216,13 +216,13 @@ export const HomePage: React.FC = () => {
             </div>
             <div>
               <div className="text-xl md:text-2xl font-black flex items-center gap-2 tracking-tight">
-                <span>1-Tap Instant Token</span>
+                <span>{t('home.instantTokenTitle')}</span>
                 <span className="text-[11px] uppercase px-2.5 py-0.5 rounded-full bg-white text-orange-700 font-black tracking-wider shadow-sm">
-                  1 Sec
+                  {t('home.oneSecBadge')}
                 </span>
               </div>
               <p className="text-amber-100 text-sm md:text-base font-bold mt-0.5">
-                ⚡ No typing, no name, no phone needed • Takes 1 second
+                {t('home.instantTokenSubtitle')}
               </p>
             </div>
           </div>
@@ -236,11 +236,11 @@ export const HomePage: React.FC = () => {
         >
           <div className="text-left">
             <div className="text-lg md:text-xl font-bold flex items-center gap-2">
-              <span>{t('home.getMyToken', 'Register with Name & Age')}</span>
+              <span>{t('home.registerFullTitle')}</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
             </div>
             <p className="text-primary-100 text-xs md:text-sm font-medium mt-0.5">
-              Enter patient details, age (for 60+ Senior Priority), or accessibility needs
+              {t('home.registerFullSubtitle')}
             </p>
           </div>
           <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm shrink-0">
@@ -260,11 +260,11 @@ export const HomePage: React.FC = () => {
             </div>
             <div>
               <div className="text-lg md:text-xl font-black flex items-center gap-2">
-                Scan Clinic QR Code
+                {t('home.scanQrTitle')}
                 <QrCode className="w-5 h-5 text-emerald-200" />
               </div>
               <p className="text-emerald-100 text-xs md:text-sm font-semibold mt-0.5">
-                Scan desk QR standee to get an instant token without typing
+                {t('home.scanQrSubtitle')}
               </p>
             </div>
           </div>
@@ -282,7 +282,7 @@ export const HomePage: React.FC = () => {
               {t('home.checkMyToken')}
             </div>
             <p className="text-muted-foreground text-sm font-medium mt-0.5">
-              {t('status.checkSubtitle', 'Check live status, wait estimate, or arrival time')}
+              {t('status.checkSubtitle')}
             </p>
           </div>
           <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform flex-shrink-0" />
@@ -309,7 +309,7 @@ export const HomePage: React.FC = () => {
 
         <div className="flex items-center gap-1 text-emerald-600 font-bold">
           <CheckCircle2 className="w-4 h-4" />
-          <span>Realtime Sync Active</span>
+          <span>{t('common.realtimeSync')}</span>
         </div>
 
         <Link to="/doctor" className="flex items-center gap-1.5 hover:text-foreground">
