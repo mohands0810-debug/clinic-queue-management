@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAccessibility } from '@/context/AccessibilityContext';
-import { Phone, AlertCircle, Volume2, Type, Sun, Moon } from 'lucide-react';
+import { Phone, AlertCircle, Volume2, Type, Sun, Moon, Camera } from 'lucide-react';
+import { QrScannerModal } from '@/components/common/QrScannerModal';
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const [showScanner, setShowScanner] = useState<boolean>(false);
   const { 
     increaseFontSize, 
     decreaseFontSize, 
@@ -123,6 +125,17 @@ export const Header: React.FC = () => {
             title={t('common.readToMe')}
           >
             <Volume2 className="w-5 h-5" />
+          </button>
+
+          {/* Quick QR Camera Scanner */}
+          <button
+            onClick={() => setShowScanner(true)}
+            aria-label="Scan Clinic QR Code"
+            className="p-2 sm:px-3 sm:py-1.5 rounded-md border font-semibold flex items-center gap-1.5 transition-colors bg-muted text-foreground hover:bg-background"
+            title="Scan Clinic QR Code"
+          >
+            <Camera className="w-5 h-5 text-primary" />
+            <span className="hidden lg:inline text-sm font-bold">Scan QR</span>
           </button>
 
           {/* Call Clinic Direct */}
