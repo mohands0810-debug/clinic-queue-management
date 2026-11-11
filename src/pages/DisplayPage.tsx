@@ -12,8 +12,6 @@ export const DisplayPage: React.FC = () => {
   const [time, setTime] = useState<string>('');
   const lastCalledTokenRef = useRef<number | null>(null);
 
-  const appUrl = window.location.origin;
-
   // ── Live Clock ──────────────────────────────────────────────────────────────
   useEffect(() => {
     const tick = () =>
