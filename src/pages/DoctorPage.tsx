@@ -23,6 +23,7 @@ import { DelayBroadcastModal } from '@/components/doctor/DelayBroadcastModal';
 import { ThermalPrintSlip } from '@/components/doctor/ThermalPrintSlip';
 import { ReportsTab } from '@/components/doctor/ReportsTab';
 import { SettingsTab } from '@/components/doctor/SettingsTab';
+import { PrescriptionWriter } from '@/components/doctor/PrescriptionWriter';
 
 import { 
   Users, 
@@ -32,7 +33,8 @@ import {
   Lock, 
   LogIn, 
   AlertCircle, 
-  RefreshCw 
+  RefreshCw,
+  FileText
 } from 'lucide-react';
 
 export const DoctorPage: React.FC = () => {
@@ -46,7 +48,7 @@ export const DoctorPage: React.FC = () => {
   const [authError, setAuthError] = useState<string | null>(null);
 
   // Tabs & Console State
-  const [activeTab, setActiveTab] = useState<'queue' | 'reports' | 'settings'>('queue');
+  const [activeTab, setActiveTab] = useState<'queue' | 'reports' | 'settings' | 'prescription'>('queue');
   const [tokens, setTokens] = useState<Token[]>([]);
   const [settings, setSettings] = useState<ClinicSettings | null>(null);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
@@ -433,6 +435,15 @@ export const DoctorPage: React.FC = () => {
             <SettingsIcon className="w-4 h-4" />
             <span>{t('doctor.settingsTab')}</span>
           </button>
+          <button
+            onClick={() => setActiveTab('prescription')}
+            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-colors ${
+              activeTab === 'prescription' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            <span>Prescription</span>
+          </button>
         </div>
 
         {/* Status Broadcast & Staff Authentication */}
@@ -550,6 +561,14 @@ export const DoctorPage: React.FC = () => {
           settings={settings}
           isDoctor={isDoctor}
           onSaved={fetchConsoleData}
+        />
+      )}
+
+      {/* TAB 4: PRESCRIPTION WRITER */}
+      {activeTab === 'prescription' && (
+        <PrescriptionWriter
+          activeToken={activePatient}
+          settings={settings}
         />
       )}
     </div>
