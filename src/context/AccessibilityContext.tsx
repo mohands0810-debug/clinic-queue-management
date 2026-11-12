@@ -72,6 +72,8 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     document.documentElement.style.setProperty('--font-scale', fontScale.toString());
+    // Set html root font-size so ALL Tailwind rem-based text scales proportionally
+    document.documentElement.style.fontSize = `${fontScale * 100}%`;
     localStorage.setItem('dhanvantri_font_scale', fontScale.toString());
   }, [fontScale]);
 
