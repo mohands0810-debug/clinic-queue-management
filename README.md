@@ -59,10 +59,103 @@ A zero-barrier digital queue platform specifically designed so that **a 75-year-
 - **Queue Tab**: Active patient card, next patient preview, atomic controls (Call Next, Start, Complete, Missed, Hold, Skip, Cancel), rapid walk-in generator with thermal slip print, live draggable waiting list, and distress help alerts.
 - **Reports Tab**: Operational metrics, waiting time trends, peak hour charts, and manual queue override audit trails.
 - **Settings Tab**: Consultation durations, buffer times, working hours, break schedules, senior interleaving policy, and an interactive **Demo / Simulation Mode**.
+- **Prescription Tab**: Digital prescription writer with print-to-letterhead, WhatsApp direct delivery, dosage schedule generator, and consultation history.
 
 ---
 
-## 4. Technology Stack
+## 4. System Architecture
+
+The system utilizes an event-driven, decoupled client-server architecture. The frontend is a Progressive Web App (PWA) built with React 18, Vite, and Tailwind CSS. The backend is completely powered by Supabase (PostgreSQL 15), providing Row Level Security (RLS), real-time WebSocket state distribution, atomic transactional logic via PostgreSQL Stored Functions (RPC), and automated background tasks.
+
+```mermaid
+flowchart TB
+    subgraph Clients["Frontend Clients (React 18 + Vite PWA)"]
+        direction TB
+        subgraph PublicArea["Public Client Layer (Zero-Auth)"]
+            MobilePatient["Patient Smartphone<br/>(/, /get-token, /status)<br/>• Senior-Friendly UI (20-28px)<br/>• Voice Readout (KN, EN, HI)<br/>• 1-Tap Instant Token"]
+            TVBoard["Waiting-Room TV Board<br/>(/display)<br/>• 10m High-Contrast View<br/>• Chime & Bilingual Audio<br/>• Fullscreen Marquee"]
+        end
+        subgraph StaffArea["Staff Client Layer (Role-Guarded)"]
+            DocConsole["Doctor Console<br/>(/doctor)<br/>• Dr Yogesh & Staff Auth<br/>• Realtime Queue Controls<br/>• Prescription Writer & Thermal Slips<br/>• Analytics Reports & Settings"]
+        end
+    end
+
+    subgraph CDN["Edge & Delivery Layer"]
+        VercelNetlify["Static Edge CDN<br/>(Vercel Production)<br/>HTTPS / WSS / PWA Precaching"]
+    end
+
+    subgraph SupabaseCloud["Supabase Backend-as-a-Service"]
+        direction TB
+        AuthSvc["Supabase Auth<br/>• Doctor / Staff Profiles<br/>• JWT Verification & RLS"]
+        
+        RealtimeEngine["Supabase Realtime Engine<br/>• Postgres Changes (WAL)<br/>• Sub-500ms WebSocket Sync<br/>• Broadcast Channels"]
+
+        PostgresDB[("PostgreSQL 15 Engine<br/>━━━━━━━━━━━━━━━━━━━━━<br/>• Tables (patients, tokens, settings)<br/>• Safe Public View (public_queue)<br/>• RLS Security Policies<br/>• Audit Log Triggers")]
+
+        RPCFuncs["PostgreSQL RPC Functions<br/>• create_token (atomic numbering)<br/>• call_next (3:1 senior interleave)<br/>• start_consultation / complete<br/>• compute_wait_estimate<br/>• reset_demo_data"]
+
+        EdgeFuncs["Background Services & Cron<br/>• Grace Period Expiry (5 mins)<br/>• Realtime Delay Detection<br/>• Midnight Token Reset"]
+    end
+
+    subgraph ExternalNotifications["External Notification Pipeline"]
+        direction LR
+        InAppAlerts["In-App Realtime<br/>Web Speech & Audio API"]
+        WhatsAppAlerts["WhatsApp Live Tracker<br/>(One-Tap Sharing Links)"]
+    end
+
+    %% Client Connections
+    MobilePatient -->|HTTPS GET| VercelNetlify
+    TVBoard -->|HTTPS GET| VercelNetlify
+    DocConsole -->|HTTPS GET| VercelNetlify
+
+    %% Backend Operations
+    DocConsole -->|JWT Auth| AuthSvc
+    DocConsole -->|RPC Invocations| RPCFuncs
+    MobilePatient -->|RPC create_token| RPCFuncs
+    MobilePatient -->|Query Safe View| PostgresDB
+    TVBoard -->|Query Safe View| PostgresDB
+
+    %% Realtime Connections
+    PostgresDB -.->|WAL Event Stream| RealtimeEngine
+    RealtimeEngine ==>|WebSocket State Updates| MobilePatient
+    RealtimeEngine ==>|WebSocket State Updates| TVBoard
+    RealtimeEngine ==>|WebSocket State Updates| DocConsole
+
+    %% External
+    MobilePatient -.->|Local Speech Synthesis| InAppAlerts
+    MobilePatient -.->|Web Share API| WhatsAppAlerts
+```
+
+### Architectural Highlights
+- **Zero-Barrier Public Access**: Patients never sign in or verify OTPs; state is securely tied to unguessable token UUIDs and session secrets.
+- **Atomic Senior Interleaving**: PostgreSQL RPC functions enforce a strict 3:1 general-to-senior interleaving ratio using transaction-level advisory locks to prevent race conditions.
+- **Sub-500ms Realtime Sync**: PostgreSQL Write-Ahead Log (WAL) changes are streamed directly to all connected devices via Supabase Realtime WebSockets.
+- **Resilient Offline Fallback**: PWA service workers cache shell assets and recent queue states so weak mobile reception in clinic basements never causes a blank screen.
+
+---
+
+## 5. Visual Previews & Screenshots
+
+### 5.1 Patient Public Experience
+| Patient Home & 1-Tap Instant Token | Multilingual Interface (Kannada `ಕನ್ನಡ`) |
+| :---: | :---: |
+| ![Patient Home](docs/assets/screenshots/home-page-patient.jpg) | ![Kannada UI](docs/assets/screenshots/home-page-kannada.jpg) |
+| *1-Tap Instant Token (zero typing), 3-step registration, camera QR scanner, and live clinic hours.* | *Native Kannada and Hindi localization with audio read-aloud support for non-literate patients.* |
+
+| 3-Step Accessible Registration | Live Token Tracker & Wait Estimation |
+| :---: | :---: |
+| ![Token Registration](docs/assets/screenshots/token-registration.png) | ![Live Status](docs/assets/screenshots/live-token-status.png) |
+| *Large touch targets, senior auto-detection (60+ yrs), and mobility/hearing/vision assistance profiles.* | *Live queue position, estimated arrival guidance, "I have reached clinic" beacon, and turn alarms.* |
+
+### 5.2 Waiting Room & Doctor Console
+| Waiting Room TV Display Board (`/display`) | Doctor Console & Operational Queue (`/doctor`) |
+| :---: | :---: |
+| ![TV Display Board](docs/assets/screenshots/tv-display-board.png) | ![Doctor Console](docs/assets/screenshots/doctor-console.png) |
+| *High-contrast 10-meter readable display with acoustic chime and bilingual Kannada/English speech announcements.* | *Active consultation room timer, one-tap queue actions, walk-in slip printer, and prescription writer.* |
+
+---
+
+## 6. Technology Stack
 
 | Layer | Technologies |
 | :--- | :--- |
@@ -79,7 +172,7 @@ A zero-barrier digital queue platform specifically designed so that **a 75-year-
 
 ---
 
-## 5. Repository Structure
+## 7. Repository Structure
 
 ```
 dhanvantri-clinic/
@@ -122,7 +215,7 @@ dhanvantri-clinic/
 
 ---
 
-## 6. Setup and Installation
+## 8. Setup and Installation
 
 ### Prerequisites
 - **Node.js**: v18.0.0 or higher
@@ -164,7 +257,7 @@ dhanvantri-clinic/
 
 ---
 
-## 7. Deployment Instructions
+## 9. Deployment Instructions
 
 ### Frontend (Vercel / Netlify)
 1. Link your GitHub repository to Vercel or Netlify.
@@ -180,7 +273,7 @@ dhanvantri-clinic/
 
 ---
 
-## 8. Development Roadmap & Phase Status
+## 10. Development Roadmap & Phase Status
 
 All 8 development phases have been completed, verified, and committed:
 
@@ -197,7 +290,7 @@ All 8 development phases have been completed, verified, and committed:
 
 ---
 
-## 9. Academic Affiliation & Social Impact
+## 11. Academic Affiliation & Social Impact
 
 This project is submitted in partial fulfillment of the requirements for the **Community Project (25BCP308)** at:
 - **Institution**: K. S. Institute of Technology (KSIT), Bengaluru
