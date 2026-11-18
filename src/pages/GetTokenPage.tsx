@@ -167,7 +167,7 @@ export const GetTokenPage: React.FC = () => {
 
         {/* STEP 1: Name + Phone */}
         {step === 1 && (
-          <form onSubmit={handleStep1Next} className="space-y-5">
+          <form onSubmit={handleStep1Next} className="space-y-5 animate-fade-in-up">
             <div className="space-y-2">
               <label className="block text-xl font-bold text-foreground">
                 {t('tokenFlow.fullName')} *
@@ -178,7 +178,7 @@ export const GetTokenPage: React.FC = () => {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder={t('tokenFlow.fullNamePlaceholder')}
-                className="w-full h-16 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                className="w-full h-16 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-4 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all duration-200"
               />
             </div>
 
@@ -194,20 +194,20 @@ export const GetTokenPage: React.FC = () => {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={t('tokenFlow.phonePlaceholder')}
-                  className="w-full h-16 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="w-full h-16 px-4 text-xl rounded-xl border border-input bg-background font-medium focus:ring-4 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all duration-200"
                 />
               </div>
             )}
 
             <div className="pt-1">
-              <label className="flex items-center gap-3 cursor-pointer">
+              <label className="flex items-center gap-3 cursor-pointer group">
                 <input
                   type="checkbox"
                   checked={noPhone}
                   onChange={(e) => setNoPhone(e.target.checked)}
-                  className="w-7 h-7 rounded border-input text-primary focus:ring-primary"
+                  className="w-7 h-7 rounded border-input text-primary focus:ring-primary transition-transform group-active:scale-90"
                 />
-                <span className="text-base font-semibold text-muted-foreground">
+                <span className="text-base font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
                   {t('tokenFlow.noPhoneToggle')}
                 </span>
               </label>
@@ -215,7 +215,7 @@ export const GetTokenPage: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full min-h-button-tall mt-4 bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md transition-colors flex items-center justify-center"
+              className="w-full min-h-button-tall mt-4 bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98] flex items-center justify-center"
             >
               {t('tokenFlow.continueStep2', 'Continue to Step 2 →')}
             </button>
@@ -224,7 +224,7 @@ export const GetTokenPage: React.FC = () => {
 
         {/* STEP 2: Age + Accessibility */}
         {step === 2 && (
-          <form onSubmit={handleStep2Next} className="space-y-5">
+          <form onSubmit={handleStep2Next} className="space-y-5 animate-fade-in-up">
             <div className="space-y-2">
               <label className="block text-xl font-bold text-foreground">
                 {t('tokenFlow.age')} *
@@ -237,17 +237,17 @@ export const GetTokenPage: React.FC = () => {
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
                 placeholder={t('tokenFlow.agePlaceholder')}
-                className="w-full h-16 px-4 text-3xl text-center rounded-xl border border-input bg-background font-bold focus:ring-2 focus:ring-primary focus:outline-none"
+                className="w-full h-16 px-4 text-3xl text-center rounded-xl border border-input bg-background font-bold focus:ring-4 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all duration-200"
               />
             </div>
 
             {/* Senior Auto-detect Banner */}
             {isSenior && (
-              <div className="w-full p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-amber-900 font-bold flex items-center gap-3">
-                <Sparkles className="w-7 h-7 text-amber-500 flex-shrink-0" />
+              <div className="w-full p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 font-bold flex items-center gap-3 animate-soft-pop">
+                <Sparkles className="w-7 h-7 text-amber-500 flex-shrink-0 animate-pulse" />
                 <div>
                   <p className="text-lg font-extrabold">🌟 {t('tokenFlow.seniorAutoBadge')}</p>
-                  <p className="text-sm font-semibold mt-0.5 opacity-80">
+                  <p className="text-sm font-semibold mt-0.5 opacity-90">
                     {t('tokenFlow.seniorAutoDesc', 'You will be given priority in the queue.')}
                   </p>
                 </div>
@@ -265,9 +265,9 @@ export const GetTokenPage: React.FC = () => {
                 return (
                   <label
                     key={need}
-                    className={`flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-colors ${
+                    className={`flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 active:scale-[0.99] ${
                       checked
-                        ? 'border-primary bg-primary/5'
+                        ? 'border-primary bg-primary/5 shadow-sm -translate-y-0.5'
                         : 'border-border hover:border-primary/40 hover:bg-muted'
                     }`}
                   >
@@ -275,7 +275,7 @@ export const GetTokenPage: React.FC = () => {
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleAccessibility(need)}
-                      className="w-7 h-7 rounded text-primary focus:ring-primary"
+                      className="w-7 h-7 rounded text-primary focus:ring-primary transition-transform active:scale-90"
                     />
                     {icon}
                     <span className="font-bold text-lg">{label}</span>
@@ -288,13 +288,13 @@ export const GetTokenPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="w-1/3 h-14 border-2 rounded-xl font-bold text-lg hover:bg-muted"
+                className="w-1/3 h-14 border-2 rounded-xl font-bold text-lg hover:bg-muted transition-colors active:scale-95"
               >
                 {t('common.back', 'Back')}
               </button>
               <button
                 type="submit"
-                className="w-2/3 min-h-button-tall bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md flex items-center justify-center"
+                className="w-2/3 min-h-button-tall bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98] flex items-center justify-center"
               >
                 {t('tokenFlow.reviewAndConfirm', 'Review & Confirm')}
               </button>
@@ -304,7 +304,7 @@ export const GetTokenPage: React.FC = () => {
 
         {/* STEP 3: Review + Confirm */}
         {step === 3 && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in-up">
             <div className="rounded-xl border p-5 bg-muted/50 space-y-4">
               <div className="flex justify-between items-center border-b pb-3">
                 <span className="text-muted-foreground font-semibold text-base">Patient Name</span>

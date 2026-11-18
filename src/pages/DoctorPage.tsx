@@ -407,11 +407,11 @@ export const DoctorPage: React.FC = () => {
         </div>
 
         {/* Tab Controls */}
-        <div className="flex rounded-xl border bg-muted p-1">
+        <div className="flex rounded-xl border bg-muted p-1 shadow-inner">
           <button
             onClick={() => setActiveTab('queue')}
-            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-colors ${
-              activeTab === 'queue' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
+            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-all duration-200 active:scale-95 ${
+              activeTab === 'queue' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground hover:bg-background/60'
             }`}
           >
             <Users className="w-4 h-4" />
@@ -419,8 +419,8 @@ export const DoctorPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('reports')}
-            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-colors ${
-              activeTab === 'reports' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
+            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-all duration-200 active:scale-95 ${
+              activeTab === 'reports' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground hover:bg-background/60'
             }`}
           >
             <BarChart3 className="w-4 h-4" />
@@ -428,8 +428,8 @@ export const DoctorPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-colors ${
-              activeTab === 'settings' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
+            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-all duration-200 active:scale-95 ${
+              activeTab === 'settings' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground hover:bg-background/60'
             }`}
           >
             <SettingsIcon className="w-4 h-4" />
@@ -437,8 +437,8 @@ export const DoctorPage: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('prescription')}
-            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-colors ${
-              activeTab === 'prescription' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
+            className={`px-4 py-2 rounded-lg font-bold flex items-center gap-2 text-sm transition-all duration-200 active:scale-95 ${
+              activeTab === 'prescription' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground hover:bg-background/60'
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -500,7 +500,7 @@ export const DoctorPage: React.FC = () => {
 
       {/* TAB 1: LIVE QUEUE TAB */}
       {activeTab === 'queue' && (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-fade-in-up">
           {/* Daily Summary Cards */}
           <DailySummaryCards
             tokens={tokens}
@@ -552,24 +552,30 @@ export const DoctorPage: React.FC = () => {
 
       {/* TAB 2: REPORTS TAB */}
       {activeTab === 'reports' && (
-        <ReportsTab tokens={tokens} settings={settings} />
+        <div className="animate-fade-in-up">
+          <ReportsTab tokens={tokens} settings={settings} />
+        </div>
       )}
 
       {/* TAB 3: SETTINGS TAB */}
       {activeTab === 'settings' && (
-        <SettingsTab
-          settings={settings}
-          isDoctor={isDoctor}
-          onSaved={fetchConsoleData}
-        />
+        <div className="animate-fade-in-up">
+          <SettingsTab
+            settings={settings}
+            isDoctor={isDoctor}
+            onSaved={fetchConsoleData}
+          />
+        </div>
       )}
 
       {/* TAB 4: PRESCRIPTION WRITER */}
       {activeTab === 'prescription' && (
-        <PrescriptionWriter
-          activeToken={activePatient}
-          settings={settings}
-        />
+        <div className="animate-fade-in-up">
+          <PrescriptionWriter
+            activeToken={activePatient}
+            settings={settings}
+          />
+        </div>
       )}
     </div>
   );

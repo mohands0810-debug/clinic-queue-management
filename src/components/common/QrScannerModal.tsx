@@ -181,7 +181,7 @@ export const QrScannerModal: React.FC<QrScannerModalProps> = ({ isOpen, onClose 
 
   return createPortal(
     <div
-      className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 animate-fade-in transition-opacity duration-200"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in transition-all duration-300"
       style={{ zIndex: 99999 }}
       onClick={(e) => {
         if (e.target === e.currentTarget) handleClose();

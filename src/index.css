@@ -108,13 +108,53 @@ button:active,
   transform: scale(0.985);
 }
 
-/* Smooth Interactive Card Hover */
+/* Smooth Interactive Card Hover & Lift */
 .interactive-card {
   transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease;
+  will-change: transform;
 }
 
 .interactive-card:hover {
   transform: translateY(-3px);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.09), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+.interactive-card:active {
+  transform: translateY(-1px) scale(0.985);
+}
+
+/* Glassmorphism Header & Modals */
+.glass-header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: hsl(var(--background) / 0.88);
+}
+
+/* Shimmer Highlight for Key CTA */
+.btn-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 5s ease-in-out infinite;
+}
+
+/* Form Input Glow Transition */
+input:focus,
+select:focus,
+textarea:focus {
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 150ms ease;
+}
+
+/* Soft Breathing Live Pulse */
+.radar-pulse {
+  position: relative;
+}
+.radar-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 2px solid currentColor;
+  opacity: 0.6;
+  animation: subtle-pulse 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 /* Micro-Stagger Animation Delays */

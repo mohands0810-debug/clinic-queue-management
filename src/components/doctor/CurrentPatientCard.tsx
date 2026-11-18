@@ -282,8 +282,8 @@ export const CurrentPatientCard: React.FC<CurrentPatientCardProps> = ({
 
       {/* Hold Turn Modal */}
       {showHoldModal && token && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-card border rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in transition-all duration-200">
+          <div className="bg-card border rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4 animate-scale-in">
             <div className="flex items-center justify-between border-b pb-2">
               <h4 className="font-bold text-lg text-foreground">Hold Patient Turn</h4>
               <button

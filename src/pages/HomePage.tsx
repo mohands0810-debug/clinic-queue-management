@@ -208,16 +208,16 @@ export const HomePage: React.FC = () => {
         {/* 1-Tap Instant Token (Zero Details / Zero Typing) */}
         <Link
           to="/instant-token"
-          className="w-full min-h-button-tall bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl px-6 py-5 shadow-xl flex items-center justify-between group transition-all duration-200 active:scale-[0.98] border-2 border-amber-300 dark:border-amber-400 interactive-card animate-fade-in-up animate-delay-150"
+          className="w-full min-h-button-tall bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl px-6 py-5 shadow-xl flex items-center justify-between group transition-all duration-300 active:scale-[0.98] border-2 border-amber-300/80 dark:border-amber-400/80 interactive-card btn-shimmer animate-fade-in-up animate-delay-150 relative overflow-hidden"
         >
-          <div className="text-left flex items-center gap-3.5">
-            <div className="w-13 h-13 rounded-2xl bg-white/25 flex items-center justify-center shrink-0 shadow-inner p-2.5">
+          <div className="text-left flex items-center gap-3.5 relative z-10">
+            <div className="w-13 h-13 rounded-2xl bg-white/25 flex items-center justify-center shrink-0 shadow-inner p-2.5 transition-transform duration-300 group-hover:scale-110">
               <Zap className="w-8 h-8 text-white fill-white animate-pulse" />
             </div>
             <div>
               <div className="text-xl md:text-2xl font-black flex items-center gap-2 tracking-tight">
                 <span>{t('home.instantTokenTitle')}</span>
-                <span className="text-[11px] uppercase px-2.5 py-0.5 rounded-full bg-white text-orange-700 font-black tracking-wider shadow-sm">
+                <span className="text-[11px] uppercase px-2.5 py-0.5 rounded-full bg-white text-orange-700 font-black tracking-wider shadow-sm transition-transform group-hover:scale-105">
                   {t('home.oneSecBadge')}
                 </span>
               </div>
@@ -226,7 +226,7 @@ export const HomePage: React.FC = () => {
               </p>
             </div>
           </div>
-          <ArrowRight className="w-7 h-7 text-white group-hover:translate-x-1.5 transition-transform shrink-0" />
+          <ArrowRight className="w-7 h-7 text-white group-hover:translate-x-2 transition-transform duration-300 shrink-0 relative z-10" />
         </Link>
 
         {/* Regular 3-Step Registration with Patient Name & Senior Care */}

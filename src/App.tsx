@@ -19,7 +19,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-200">
       <InitialOpenSplash />
       {!isTvDisplay && <Header />}
-      <main key={location.pathname} className="flex-1 animate-fade-in">
+      <main key={location.pathname} className="flex-1 animate-page-enter">
         {children}
       </main>
     </div>

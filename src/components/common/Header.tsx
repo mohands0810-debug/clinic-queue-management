@@ -28,10 +28,10 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background text-foreground shadow-sm px-4 py-3 mb-4 animate-fade-in-down transition-colors duration-200">
+    <header className="sticky top-0 z-40 w-full border-b glass-header shadow-sm px-4 py-3 mb-4 animate-fade-in-down transition-colors duration-200">
       <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
         {/* Clinic Identity */}
-        <Link to="/" className="flex items-center gap-2 group">
+        <Link to="/" className="flex items-center gap-2 group transition-transform active:scale-[0.98]">
           <img
             src="/clinic-icon.svg"
             alt="Dhanvantri Clinic Logo"
@@ -50,27 +50,27 @@ export const Header: React.FC = () => {
         {/* Accessibility & Language Controls */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Language Selector */}
-          <div className="flex rounded-md border p-1 bg-muted">
+          <div className="flex rounded-lg border p-1 bg-muted shadow-inner">
             <button
               onClick={() => handleLanguageChange('en')}
-              className={`px-3 py-1.5 rounded text-sm md:text-base font-semibold transition-colors ${
-                i18n.language === 'en' ? 'bg-primary text-primary-foreground' : 'text-foreground'
+              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${
+                i18n.language === 'en' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground hover:bg-background/60'
               }`}
             >
               English
             </button>
             <button
               onClick={() => handleLanguageChange('kn')}
-              className={`px-3 py-1.5 rounded text-sm md:text-base font-semibold transition-colors ${
-                i18n.language.startsWith('kn') ? 'bg-primary text-primary-foreground' : 'text-foreground'
+              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${
+                i18n.language.startsWith('kn') ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
               }`}
             >
               ಕನ್ನಡ
             </button>
             <button
               onClick={() => handleLanguageChange('hi')}
-              className={`px-3 py-1.5 rounded text-sm md:text-base font-semibold transition-colors ${
-                i18n.language.startsWith('hi') ? 'bg-primary text-primary-foreground' : 'text-foreground'
+              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${
+                i18n.language.startsWith('hi') ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
               }`}
             >
               हिन्दी
@@ -78,11 +78,11 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Font Size A- / A+ */}
-          <div className="flex items-center border rounded-md bg-muted px-1">
+          <div className="flex items-center border rounded-lg bg-muted px-1 shadow-inner">
             <button
               onClick={decreaseFontSize}
               aria-label="Decrease text size"
-              className="px-2.5 py-1.5 font-bold hover:bg-background rounded flex items-center gap-1 text-sm md:text-base"
+              className="px-2.5 py-1.5 font-bold hover:bg-background rounded-md flex items-center gap-1 text-sm md:text-base transition-colors active:scale-95"
               title="Decrease text size"
             >
               <Type className="w-3.5 h-3.5" />-
@@ -90,7 +90,7 @@ export const Header: React.FC = () => {
             <button
               onClick={increaseFontSize}
               aria-label="Increase text size"
-              className="px-2.5 py-1.5 font-bold hover:bg-background rounded flex items-center gap-1 text-sm md:text-base"
+              className="px-2.5 py-1.5 font-bold hover:bg-background rounded-md flex items-center gap-1 text-sm md:text-base transition-colors active:scale-95"
               title="Increase text size"
             >
               <Type className="w-4 h-4" />+
@@ -101,7 +101,7 @@ export const Header: React.FC = () => {
           <button
             onClick={toggleDarkMode}
             aria-label={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            className="px-3 py-1.5 rounded-md border font-semibold flex items-center gap-1.5 transition-all duration-200 bg-muted text-foreground hover:bg-background hover:shadow-sm active:scale-95 group"
+            className="px-3 py-1.5 rounded-lg border font-semibold flex items-center gap-1.5 transition-all duration-200 bg-muted text-foreground hover:bg-background hover:shadow-sm active:scale-95 group"
             title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {isDarkMode ? (
@@ -121,8 +121,8 @@ export const Header: React.FC = () => {
           <button
             onClick={() => speakText(`${t('clinic.name')}, ${t('clinic.doctor')}.`)}
             aria-label={t('common.readToMe')}
-            className={`p-2 rounded-md border font-semibold flex items-center gap-1 transition-colors ${
-              isSpeaking ? 'bg-primary text-primary-foreground animate-pulse' : 'bg-muted text-foreground'
+            className={`p-2 rounded-lg border font-semibold flex items-center gap-1 transition-all duration-200 active:scale-95 ${
+              isSpeaking ? 'bg-primary text-primary-foreground animate-pulse shadow-md' : 'bg-muted text-foreground hover:bg-background'
             }`}
             title={t('common.readToMe')}
           >
@@ -133,7 +133,7 @@ export const Header: React.FC = () => {
           <button
             onClick={() => setShowScanner(true)}
             aria-label="Scan Clinic QR Code"
-            className="p-2 sm:px-3 sm:py-1.5 rounded-md border font-semibold flex items-center gap-1.5 transition-colors bg-muted text-foreground hover:bg-background"
+            className="p-2 sm:px-3 sm:py-1.5 rounded-lg border font-semibold flex items-center gap-1.5 transition-all duration-200 bg-muted text-foreground hover:bg-background active:scale-95 hover:shadow-sm"
             title="Scan Clinic QR Code"
           >
             <Camera className="w-5 h-5 text-primary" />
@@ -143,7 +143,7 @@ export const Header: React.FC = () => {
           {/* Call Clinic Direct */}
           <a
             href="tel:+919876543210"
-            className="p-2 sm:px-3 sm:py-1.5 rounded-md bg-emerald-600 text-white font-semibold flex items-center gap-1.5 hover:bg-emerald-700 transition-colors"
+            className="p-2 sm:px-3 sm:py-1.5 rounded-lg bg-emerald-600 text-white font-semibold flex items-center gap-1.5 hover:bg-emerald-700 hover:shadow-md transition-all duration-200 active:scale-95"
             title={t('common.callClinic')}
           >
             <Phone className="w-5 h-5" />
@@ -153,7 +153,7 @@ export const Header: React.FC = () => {
           {/* Emergency Distress Alert */}
           <button
             onClick={handleEmergencyHelp}
-            className="px-3 py-1.5 rounded-md bg-destructive text-destructive-foreground font-bold flex items-center gap-1.5 hover:opacity-90 shadow-sm"
+            className="px-3 py-1.5 rounded-lg bg-destructive text-destructive-foreground font-bold flex items-center gap-1.5 hover:opacity-90 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95"
           >
             <AlertCircle className="w-5 h-5" />
             <span className="text-sm font-bold">{t('common.needHelp')}</span>

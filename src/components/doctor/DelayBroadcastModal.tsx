@@ -53,11 +53,11 @@ export const DelayBroadcastModal: React.FC<DelayBroadcastModalProps> = ({
       {/* Modal Dialog — rendered in #modal-root outside React/header stacking contexts */}
       {showModal && createPortal(
         <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in transition-all duration-300"
           style={{ zIndex: 99999 }}
           onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false); }}
         >
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-5 relative" style={{ zIndex: 100000 }}>
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-5 relative animate-scale-in transition-all duration-300" style={{ zIndex: 100000 }}>
             <div className="flex items-center justify-between border-b pb-3">
               <div>
                 <h3 className="font-extrabold text-xl text-foreground flex items-center gap-2">

@@ -212,18 +212,18 @@ export const StatusPage: React.FC = () => {
   return (
     <div className={`max-w-2xl mx-auto px-4 py-6 space-y-6 ${isCalled ? 'pt-24' : ''}`}>
 
-      {/* Called Flash Banner — fixed top of page */}
+      {/* Called Flash Banner — fixed top of page with smooth pulse */}
       {isCalled && token && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-emerald-500 text-white text-center py-4 px-6 font-black text-xl animate-bounce shadow-2xl">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-emerald-600 text-white text-center py-4 px-6 font-black text-xl animate-subtle-pulse shadow-2xl border-b-2 border-emerald-400">
           🔔 Token #{token.token_number} — YOUR TURN! Please go in.
         </div>
       )}
 
       {/* Back Navigation */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between animate-fade-in-down">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 font-bold text-primary hover:underline text-lg"
+          className="inline-flex items-center gap-2 font-bold text-primary hover:underline text-lg transition-transform active:scale-95"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>{t('nav.home')}</span>
@@ -236,7 +236,7 @@ export const StatusPage: React.FC = () => {
         </div>
       ) : !tokenId || !token ? (
         /* Manual Token Search */
-        <div className="bg-card border rounded-2xl p-6 shadow-sm space-y-5 text-center">
+        <div className="bg-card border rounded-2xl p-6 shadow-sm space-y-5 text-center animate-fade-in-up">
           <h2 className="text-2xl font-extrabold">{t('home.checkMyToken')}</h2>
           <p className="text-muted-foreground text-lg font-medium">
             Enter your token number to view your live queue position:
@@ -247,20 +247,20 @@ export const StatusPage: React.FC = () => {
               placeholder="e.g. 14"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 h-16 px-4 text-2xl border-2 rounded-xl font-bold text-center focus:ring-2 focus:ring-primary focus:outline-none"
+              className="flex-1 h-16 px-4 text-2xl border-2 rounded-xl font-bold text-center focus:ring-4 focus:ring-primary/20 focus:border-primary focus:outline-none transition-all duration-200"
             />
             <button
               type="submit"
-              className="px-6 h-16 bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md"
+              className="px-6 h-16 bg-primary text-primary-foreground font-bold text-xl rounded-xl hover:bg-primary-700 shadow-md hover:shadow-lg transition-all duration-200 active:scale-95"
             >
               Check
             </button>
           </form>
         </div>
       ) : (
-        <div className="space-y-5">
+        <div className="space-y-5 animate-fade-in-up">
           {/* Token Hero Card */}
-          <div className="bg-card border-2 border-primary/20 rounded-2xl p-6 text-center shadow-lg space-y-4">
+          <div className="bg-card border-2 border-primary/20 rounded-3xl p-6 text-center shadow-lg space-y-4 interactive-card">
             <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
               {t('status.myToken')}
             </span>

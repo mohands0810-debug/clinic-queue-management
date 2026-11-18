@@ -250,7 +250,7 @@ export const DisplayPage: React.FC = () => {
 
               {/* Status banner */}
               {currentServing.status === 'called' ? (
-                <div className="text-2xl font-black animate-bounce text-emerald-300 mt-4">
+                <div className="text-2xl font-black animate-subtle-pulse text-emerald-300 mt-4 tracking-wide bg-emerald-950/60 border border-emerald-500/50 px-6 py-2 rounded-full shadow-lg">
                   🔔 PLEASE PROCEED TO DOCTOR&apos;S ROOM
                 </div>
               ) : (
