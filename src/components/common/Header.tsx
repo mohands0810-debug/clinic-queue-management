@@ -8,13 +8,13 @@ import { QrScannerModal } from '@/components/common/QrScannerModal';
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [showScanner, setShowScanner] = useState<boolean>(false);
-  const { 
-    increaseFontSize, 
-    decreaseFontSize, 
-    isDarkMode, 
-    toggleDarkMode, 
+  const {
+    increaseFontSize,
+    decreaseFontSize,
+    isDarkMode,
+    toggleDarkMode,
     speakText,
-    isSpeaking 
+    isSpeaking
   } = useAccessibility();
 
   const handleLanguageChange = (lang: string) => {
@@ -53,25 +53,22 @@ export const Header: React.FC = () => {
           <div className="flex rounded-lg border p-1 bg-muted shadow-inner">
             <button
               onClick={() => handleLanguageChange('en')}
-              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${
-                i18n.language === 'en' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground hover:bg-background/60'
-              }`}
+              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${i18n.language === 'en' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground hover:bg-background/60'
+                }`}
             >
               English
             </button>
             <button
               onClick={() => handleLanguageChange('kn')}
-              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${
-                i18n.language.startsWith('kn') ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
-              }`}
+              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${i18n.language.startsWith('kn') ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
+                }`}
             >
               ಕನ್ನಡ
             </button>
             <button
               onClick={() => handleLanguageChange('hi')}
-              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${
-                i18n.language.startsWith('hi') ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
-              }`}
+              className={`px-3 py-1.5 rounded-md text-sm md:text-base font-semibold transition-all duration-200 active:scale-95 ${i18n.language.startsWith('hi') ? 'bg-primary text-primary-foreground shadow-sm' : 'text-foreground'
+                }`}
             >
               हिन्दी
             </button>
@@ -121,9 +118,8 @@ export const Header: React.FC = () => {
           <button
             onClick={() => speakText(`${t('clinic.name')}, ${t('clinic.doctor')}.`)}
             aria-label={t('common.readToMe')}
-            className={`p-2 rounded-lg border font-semibold flex items-center gap-1 transition-all duration-200 active:scale-95 ${
-              isSpeaking ? 'bg-primary text-primary-foreground animate-pulse shadow-md' : 'bg-muted text-foreground hover:bg-background'
-            }`}
+            className={`p-2 rounded-lg border font-semibold flex items-center gap-1 transition-all duration-200 active:scale-95 ${isSpeaking ? 'bg-primary text-primary-foreground animate-pulse shadow-md' : 'bg-muted text-foreground hover:bg-background'
+              }`}
             title={t('common.readToMe')}
           >
             <Volume2 className="w-5 h-5" />
